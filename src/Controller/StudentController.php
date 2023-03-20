@@ -14,11 +14,10 @@ class StudentController extends AbstractController
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
-    // Api to add a course
+    // Api to subscribe student to course
     #[Route('/subscribe/{courseId}', name: 'subscribe_to_course', methods: ['GET'])]
     public function subscribeToCourse(Request $request, $courseId, CourseRepository $courseRepository): Response
     {
-        // Get request Body and decode it from JSON to array
         $course = $courseRepository->find($courseId);
         if(!$course)
         {

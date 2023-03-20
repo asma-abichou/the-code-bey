@@ -11,21 +11,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/api')]
+#[Route('/api/course')]
 class CourseController extends AbstractController
 {
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 
-    #[Route('/course', name: 'list_course', methods: ['GET'])]
+    #[Route('', name: 'list_course', methods: ['GET'])]
     public function index(CourseRepository $courseRepository): Response
     {
         return $this->json($courseRepository->findAll(), 200, [], ['groups' => ['main']]);
     }
 
     // Api to add a course
-    #[Route('/course/{categoryId}', name: 'add_course', methods: ['POST'])]
+    #[Route('/{categoryId}', name: 'add_course', methods: ['POST'])]
     public function addCourse(Request $request, $categoryId, CategoryRepository $categoryRepository): Response
     {
         // Get request Body and decode it from JSON to array
@@ -50,7 +50,7 @@ class CourseController extends AbstractController
     }
 
     // Get course by id
-    #[Route('/course/{id}', name: 'get_course_by_id', methods: ['GET'])]
+    #[Route('/{id}', name: 'get_course_by_id', methods: ['GET'])]
     public function getCourseById(CourseRepository $courseRepository, $id): Response
     {
         $course = $courseRepository->find($id);
@@ -63,7 +63,7 @@ class CourseController extends AbstractController
 
     }
 
-    #[Route('/course/{id}', name: 'delete_course', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'delete_course', methods: ['DELETE'])]
     public function deleteCourse(CourseRepository $courseRepository, $id): Response
     {
         $course = $courseRepository->find($id);
@@ -75,7 +75,7 @@ class CourseController extends AbstractController
         return new Response('The course with ID '.$id.' has been deleted');
     }
 
-    #[Route('/course/{id}', name: 'update_course', methods: ['PUT'])]
+    #[Route('/{id}', name: 'update_course', methods: ['PUT'])]
     public function updateCourse(CourseRepository $courseRepository, $id, Request $request): Response
     {
         $course = $courseRepository->find($id);
@@ -87,11 +87,10 @@ class CourseController extends AbstractController
         $course->setDescription($content["description"]);
         $this->entityManager->persist($course);
         $this->entityManager->flush();
+        $this->saveData($course);
         return $this->json($course, 200, [], ['groups' => ['main']]);
     }
 
-    #[Route('/courses/{id}/add-student', name: 'course_add_student', methods: ['POST'])]
-    public function addStudent(Request $request, Course $course): Response
-    {
-    }
+
+
 }
