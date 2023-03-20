@@ -18,11 +18,11 @@ class CategoryController extends AbstractController
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
-
     #[Route('/category', name: 'list', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository): Response
     {
         return $this->json($categoryRepository->findAll(), 200, [], ['groups' => ['main']]);
+
     }
 
 
@@ -37,7 +37,7 @@ class CategoryController extends AbstractController
         // Save the new category to the database
         $this->entityManager->persist($category);
         $this->entityManager->flush();
-        return $this->json($category, 200);
+        return $this->json($category, 200,  [], ['groups' => ['main']]);
     }
 
     #[Route('/category/{id}', name: 'get_by_id', methods: ['GET'])]

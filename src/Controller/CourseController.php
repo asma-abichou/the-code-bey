@@ -41,12 +41,12 @@ class CourseController extends AbstractController
         $newCourse->setTitle($title);
         $newCourse->setDescription($description);
         // link course to the authenticated user
-        $newCourse->addUser($currentUser);
+        $newCourse->setTeacher($currentUser);
         // link course to the category
         $newCourse->setCategory($category);
         $this->entityManager->persist($newCourse);
         $this->entityManager->flush();
-        return $this->json(["message" => "Course has been saved successfully"], 200);
+        return $this->json($newCourse, 200, [], ['groups' => ['main']]);
     }
 
     // Get course by id

@@ -25,21 +25,25 @@ class Course
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'courses')]
-    private Collection $user;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[ORM\ManyToOne(inversedBy: 'createdCourses')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $teacher = null;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'subscribedCourses')]
+    #[ORM\JoinTable(name: 'course_student')]
+    private Collection $student;
 
     public function __construct()
     {
-        $this->user = new ArrayCollection();
         $this->student = new ArrayCollection();
-        $this->courses = new ArrayCollection();
     }
+
+
 
     public function getId(): ?int
     {
@@ -70,29 +74,6 @@ class Course
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
-    {
-        return $this->user;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        $this->user->removeElement($user);
-
-        return $this;
-    }
 
     public function getCategory(): ?Category
     {
@@ -105,5 +86,42 @@ class Course
 
         return $this;
     }
+
+    public function getTeacher(): ?User
+    {
+        return $this->teacher;
+    }
+
+    public function setTeacher(?User $teacher): self
+    {
+        $this->teacher = $teacher;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getStudent(): Collection
+    {
+        return $this->student;
+    }
+
+    public function addStudent(User $student): self
+    {
+        if (!$this->student->contains($student)) {
+            $this->student->add($student);
+        }
+
+        return $this;
+    }
+
+    public function removeStudent(User $student): self
+    {
+        $this->student->removeElement($student);
+
+        return $this;
+    }
+
 
 }

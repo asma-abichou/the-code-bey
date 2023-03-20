@@ -45,12 +45,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $address = null;
 
-    #[ORM\ManyToMany(targetEntity: Course::class, mappedBy: 'user')]
-    private Collection $courses;
+    #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Course::class)]
+    private Collection $createdCourses;
+
+    #[ORM\ManyToMany(targetEntity: Course::class, mappedBy: 'student')]
+    #[ORM\JoinTable(name: 'course_student')]
+    private Collection $subscribedCourses;
 
     public function __construct()
     {
-        $this->courses = new ArrayCollection();
+        $this->createdCourses = new ArrayCollection();
+        $this->subscribedCourses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -174,27 +179,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Course>
      */
-    public function getCourses(): Collection
+    public function getCreatedCourses(): Collection
     {
-        return $this->courses;
+        return $this->createdCourses;
     }
 
-    public function addCourse(Course $course): self
+    public function addCreatedCourse(Course $createdCourse): self
     {
-        if (!$this->courses->contains($course)) {
-            $this->courses->add($course);
-            $course->addUser($this);
+        if (!$this->createdCourses->contains($createdCourse)) {
+            $this->createdCourses->add($createdCourse);
+            $createdCourse->setTeacher($this);
         }
 
         return $this;
     }
 
-    public function removeCourse(Course $course): self
+    public function removeCreatedCourse(Course $createdCourse): self
     {
-        if ($this->courses->removeElement($course)) {
-            $course->removeUser($this);
+        if ($this->createdCourses->removeElement($createdCourse)) {
+            // set the owning side to null (unless already changed)
+            if ($createdCourse->getTeacher() === $this) {
+                $createdCourse->setTeacher(null);
+            }
         }
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Course>
+     */
+    public function getSubscribedCourses(): Collection
+    {
+        return $this->subscribedCourses;
+    }
+
+    public function addSubscribedCourse(Course $subscribedCourse): self
+    {
+        if (!$this->subscribedCourses->contains($subscribedCourse)) {
+            $this->subscribedCourses->add($subscribedCourse);
+            $subscribedCourse->addStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscribedCourse(Course $subscribedCourse): self
+    {
+        if ($this->subscribedCourses->removeElement($subscribedCourse)) {
+            $subscribedCourse->removeStudent($this);
+        }
+
+        return $this;
+    }
+
 }
