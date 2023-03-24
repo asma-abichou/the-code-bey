@@ -25,6 +25,9 @@ class Course
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[Groups('main')]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $duration = null;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
     #[ORM\JoinColumn(nullable: false)]
@@ -37,6 +40,7 @@ class Course
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'subscribedCourses')]
     #[ORM\JoinTable(name: 'course_student')]
     private Collection $student;
+
 
     public function __construct()
     {
@@ -70,6 +74,18 @@ class Course
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getDuration(): ?string
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(?string $duration): self
+    {
+        $this->duration = $duration;
 
         return $this;
     }

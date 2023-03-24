@@ -27,6 +27,8 @@ class Category
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Course::class)]
     private Collection $courses;
 
+
+
     public function __construct()
     {
         $this->User = new ArrayCollection();
@@ -105,4 +107,6 @@ class Category
 
         return $this;
     }
+
+
 }

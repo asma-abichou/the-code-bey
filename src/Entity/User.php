@@ -42,8 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $dateOfBirth = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $address = null;
+
 
     #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Course::class)]
     private Collection $createdCourses;
@@ -164,17 +163,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(string $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Course>

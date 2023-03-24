@@ -31,6 +31,12 @@ class CategoryController extends AbstractController
     {
         // Get the request content as an array
         $requestData = json_decode($request->getContent(), true);
+
+        // Check if the title field is empty or null
+        if (empty($requestData['title']) || is_null ($requestData ['title'])) {
+            return $this->json(['error' => 'Title field cannot be empty'], 400);
+        }
+
         // Create a new ClassCategory object with the request data
         $category = new Category();
         $category->setTitle($requestData['title']);
@@ -43,15 +49,12 @@ class CategoryController extends AbstractController
     #[Route('/category/{id}', name: 'get_by_id', methods: ['GET'])]
     public function getCategoryById(CategoryRepository $categoryRepository, $id,Request $request): Response
     {
-        $category = $categoryRepository->findBy(["des" => "symfon"]);
-
+        $category = $categoryRepository->findAll();
         if (!$category) {
             return $this->json(["message" => "There is no category with that ID"]);
         }
-
         return $this->json($category, 200, [], ['groups' => ['main']]);
     }
-
 
 
     #[Route('/category/{id}', name: 'update_by_id', methods: ['PUT'])]
@@ -79,6 +82,7 @@ class CategoryController extends AbstractController
         $this->entityManager->remove($category);
         $this->entityManager->flush();
         return new Response('The category with ID '.$id.' has been deleted');
+
     }
    /* public function calculateTotalHours(): int
     {

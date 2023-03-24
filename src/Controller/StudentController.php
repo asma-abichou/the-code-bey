@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\CourseRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,5 +29,31 @@ class StudentController extends AbstractController
         $this->entityManager->persist($course);
         $this->entityManager->flush();
         return $this->json($course, 200, [], ['groups' => ['main']]);
+    }
+
+    // create an api to get the student subscribed courses
+    #[Route('/subscribed-courses', name: 'get_subscribed_courses', methods: ['GET'])]
+    public function getStudentSubscribedCourses(Request $request, UserRepository $userRepository): Response
+    {   $currentUser  = $this->getUser();
+        // Check if the current user is a student
+        if(!$this->isGranted("ROLE_STUDENT"))
+        {
+            return $this->json(["message" => "You are not a student and you are not authorized to view subscribed courses!"], 403);
+        }
+        $subscribedCourses  = $currentUser->getSubscribedCourses();
+        return $this->json($subscribedCourses , 200, [], ['groups' => ['main']]);
+
+    }
+
+    // create an api to get the teacher created courses
+    #[Route('/created-courses', name: 'get_created_courses', methods: ['GET'])]
+    public function getTeacherCreatedCourses(Request $request, CourseRepository $courseRepository): Response
+    {
+        $currentUser = $this->getUser();
+        if (!$this->isGranted('ROLE_TEACHER')) {
+            return $this->json(["message" => "You are not authorized to view created courses!"], 403);
+        }
+        $courseCreated = $currentUser->getCreatedCourses();
+        return $this->json($courseCreated, 200, [], ['groups' => ['main']]);
     }
 }

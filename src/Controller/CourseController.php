@@ -28,18 +28,25 @@ class CourseController extends AbstractController
     #[Route('/{categoryId}', name: 'add_course', methods: ['POST'])]
     public function addCourse(Request $request, $categoryId, CategoryRepository $categoryRepository): Response
     {
+        if(!$this->isGranted("ROLE_TEACHER"))
+        {
+            return $this->json(["message" => "You are not a teacher and you are not authorized to add a course!"], 403);
+        }
+        $currentUser = $this->getUser();
         // Get request Body and decode it from JSON to array
         $content = json_decode($request->getContent(), true);
         // get the category object by category id
         $category = $categoryRepository->find($categoryId);
-
         $title = $content["title"];
         $description = $content["description"];
+        $duration = $content["duration"];
+
         // get authenticated User
-        $currentUser = $this->getUser();
+
         $newCourse = new Course();
         $newCourse->setTitle($title);
         $newCourse->setDescription($description);
+        $newCourse->setDuration($duration);
         // link course to the authenticated user
         $newCourse->setTeacher($currentUser);
         // link course to the category
@@ -67,6 +74,11 @@ class CourseController extends AbstractController
     public function deleteCourse(CourseRepository $courseRepository, $id): Response
     {
         $course = $courseRepository->find($id);
+        if(!$this->isGranted("ROLE_TEACHER"))
+        {
+            return $this->json(["message" => "You are not a teacher and you are not authorized to add a course!"], 403);
+        }
+
         if (!$course) {
             return $this->json(["message" => "There is no course with that ID"]);
         }
@@ -78,6 +90,10 @@ class CourseController extends AbstractController
     #[Route('/{id}', name: 'update_course', methods: ['PUT'])]
     public function updateCourse(CourseRepository $courseRepository, $id, Request $request): Response
     {
+        if (!$this->isGranted("ROLE_TEACHER"))
+        {
+            return $this->json(["message" => "You are not authorized to update this course"], 403);
+        }
         $course = $courseRepository->find($id);
         if (!$course) {
             return $this->json(["message" => "There is no course with that ID"]);
@@ -90,7 +106,4 @@ class CourseController extends AbstractController
         $this->saveData($course);
         return $this->json($course, 200, [], ['groups' => ['main']]);
     }
-
-
-
 }
