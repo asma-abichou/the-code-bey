@@ -1,0 +1,40 @@
+.about {
+    min-height: 100vh;
+  }
+  .about-header {
+    min-height: 100vh;
+    background-color: #020101;
+    color: #fff;
+    background-image: url();
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: grid;
+    place-items: center;
+    list-style: 1.6;
+  }
+  .about-header h1 {
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  .heading-about-primary {
+    font-size: 60px;
+  }
+  .heading-about-secondary {
+    font-size: 35px;
+    font-weight: 400;
+  }
+  .about-team {
+    color: #1d2a45;
+  }
+  
+  /* ------------------------------- MEDIA QUERY ------------------------------ */
+  @media (max-width: 668px) {
+    .heading-about-primary {
+      font-size: 30px;
+    }
+    .heading-about-secondary {
+      font-size: 20px;
+    }
+  }

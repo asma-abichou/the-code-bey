@@ -1,0 +1,46 @@
+.profile-conatiner{
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 60px !important;
+    
+}
+
+.avatar{
+    position: absolute !important;
+    top: 173px;
+    left: 546px;
+    z-index: 1;
+    border: 8px solid white;
+}
+
+.trainer-name{
+    margin-top: 35px !important;
+}
+.drawer{
+    width: 200px;
+    box-sizing: border-box;
+    margin-top: 74px;
+}
+.css-1f2xuhi-MuiDrawer-docked .MuiDrawer-paper {
+    width: 195px !important;
+    box-sizing: border-box;
+    margin-top: 72px;
+    background-color: #081730;
+}
+.css-i4bv87-MuiSvgIcon-root {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentColor;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-size: 1.5rem;
+    color: aliceblue;
+}

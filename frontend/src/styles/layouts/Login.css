@@ -1,0 +1,89 @@
+.Login{
+    text-align: center;
+    background-color:#071631;
+    color : #AC2719 ;
+    }
+    
+    .label{
+    display: block;
+    font-size: larger;
+    color: white;
+    padding: 5px;
+    }
+    
+    .input{
+    font-size: larger;
+    padding: 5px;
+    margin: 2px;
+    
+    }
+    .btn{
+    color: white;
+    background-color: red;
+    border-radius: 5px;
+    font-size: larger;
+    display: block;
+    padding: 5px;
+    margin: 10px auto;
+    }
+    
+    .messages{
+    display: flex;
+    justify-content: center;
+    margin: 15px;
+    }
+    
+    .error{
+    display: block;
+    background-color: red;
+    color: white;
+    width: fit-content;
+    height: 50px;
+    padding: 5px;
+    }
+    
+    .success{
+    display: block;
+    background-color: rgb(6, 24, 30);
+    color: black;
+    width: fit-content;
+    height: 50px;
+    padding: 5px;
+    }
+    
+    p {
+        color:pink;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+  margin-top: 20px;
+}
+
+.line {
+  position: relative;
+  display: inline-block;
+}
+
+.line:before,
+.line:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #6b2525;
+  transition: all 0.3s ease-out;
+}
+
+.line:before {
+  left: -20px;
+}
+
+.line:after {
+  right: -20px;
+}
+
+.line:hover:before,
+.line:hover:after {
+  width: 20px;
+}

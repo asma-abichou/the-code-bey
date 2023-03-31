@@ -1,0 +1,47 @@
+.team-member {
+    text-align: center;
+  }
+  .img-box {
+    height: 350px;
+    overflow: hidden;
+    border-radius: 3px;
+    position: relative;
+  }
+  .team-member img {
+    display: inline-block;
+    margin: 0 auto;
+    height: 350px;
+    border-radius: 3px;
+    object-fit: cover;
+    transition: all 0.5s ease-in-out;
+    cursor: progress;
+    position: relative;
+  }
+  .team-member p {
+    font-size: 14px;
+  }
+  .team-member:hover img {
+    transform: scale(1.1);
+    filter: brightness(0.6);
+  }
+  .hide-email {
+    position: absolute;
+    top: 120%;
+    left: 50%;
+    width: 100%;
+    font-size: 12px !important;
+    padding: 4px;
+    transform: translate(-50%, -50%);
+    color: #eeeeee;
+    background-color: #1d2a45;
+    border-bottom: 0.5px solid #fff;
+    transition: all 0.8s ease;
+    visibility: none;
+  }
+  .img-box:hover .hide-email {
+    top: 75%;
+    visibility: visible;
+  }
+  .team-member h6 {
+    font-weight: 600;
+  }
