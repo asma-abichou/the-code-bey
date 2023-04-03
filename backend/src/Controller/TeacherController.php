@@ -17,10 +17,8 @@ class TeacherController extends AbstractController
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
-
-
     // create an api to get the teacher created courses
-    #[Route('/created-courses', name: 'get_created_courses', methods: ['GET'])]
+    #[Route('/created-courses', name: 'get_courses', methods: ['GET'])]
     public function getTeacherCreatedCourses(Request $request, CourseRepository $courseRepository): Response
     {
         $currentUser = $this->getUser();
@@ -41,67 +39,60 @@ class TeacherController extends AbstractController
         {
             return $this->json(["message" => "You are not a teacher and you are not authorized !"], 403);
         }
-        $user = $userRepository->find($currentUser);
+        $teacher = $userRepository->find($currentUser);
 
-        $user = $user->getCreatedCourses();
+        $subscribedCourses = $teacher->getcreatedCourses();
 
-        return $this->json($user, 200, [], ['groups' => ['main']]);
+        $allCourses = [];
+        foreach ($subscribedCourses as $course)
+        {
+            $courseArr = ["title" => $course->getTitle(), "description" => $course->getDescription(), "duration" => $course->getDuration(), "video" => $course->getVideo()];
+            $allCourses["courses"][] = $courseArr;
+        }
+
+        $userArray["teacher"] = ["firstName" => $teacher->getFirstName(), "lastName" => $teacher->getLastName(), "email" => $teacher->getEmail(), "dateOfBirth" => $teacher->getDateOfBirth()];
+        $response = array_merge($userArray, $allCourses);
+        return $this->json($response, 200);
 
     }
 
 
-    #[Route('/profile/edit/{teacherId}', name: 'teacher_profile_edit', methods: ['PUT'])]
-    public function profileEdit(Request $request, $teacherId, UserRepository $userRepository): Response
+    #[Route('/profile/edit', name: 'teacher_profile_edit', methods: ['POST'])]
+    public function profileEdit(Request $request, UserRepository $userRepository): Response
     {
         $currentUser  = $this->getUser();
+        $currentUserId = $currentUser->getId();
 
-        if(!$this->isGranted("ROLE_STUDENT"))
+        if(!$this->isGranted("ROLE_TEACHER"))
         {
-            return $this->json(["message" => "You are not a student and you are not authorized !"], 403);
+            return $this->json(["message" => "You are not a teacher and you are not authorized !"], 403);
         }
-        $user = $userRepository->find($id);
-        $content = json_decode($request->getContent(), true);
-        $user->setEmail($content["email"]);
-        $user->setPassword($content["password"]);
+        $user = $userRepository->find($currentUserId);
+        $content = $request->request->all();
         $user->setFirstName($content["firstName"]);
         $user->setLastName($content["lastName"]);
+
+        $profilePictureFile = $request->files->get('profilePicture');
+        if ($profilePictureFile) {
+            // Generate random name for the picture
+            $pictureFileName = md5(uniqid()) . $profilePictureFile->getClientOriginalName();
+            // Remove spaces from the picture file name
+            $pictureFileName = str_replace(" ","", $pictureFileName);
+            $picturePath = "/public/uploaded-pictures/";
+            // get full path where to upload the picture
+            $fullPath = $this->getParameter('kernel.project_dir') . $picturePath;
+            // uploading the picture to the folder
+            $profilePictureFile->move($fullPath, $pictureFileName);
+            // Saving picture path in the database
+            $user->setPicture("/uploaded-pictures/" . $pictureFileName);
+        }
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
-        return $this->json(["message" => $user->getUserIdentifier(). " user edit  successfully!"], 201);
+        // We use groups edit-profile to specify the properties to return
+        return $this->json($user, 200, [], ['groups' => ['edit-profile']]);
     }
 
 
-
-    #[Route('/image/{idTeacher}/upload', name: 'teacher_image_upload', methods: ['POST'])]
-    public function userImageUpload(Request $request, $id, userRepository $userRepository): Response
-    {
-        $user = $userRepository->find($id);
-
-        if (!$user) {
-            return $this->json(["message" => "There is no student with that ID"]);
-        }
-
-
-        /* @var UploadedFile $imageFile */
-        $imageFile = $request->files->get('myPicture');
-        //1- Verify file extension , it must be .mp4
-
-        if ($imageFile->getClientOriginalExtension() !== 'jpg') {
-            return $this->json(["message" => "Invalid file format. Please upload a .jpg file."], 400);
-        }
-        $imageFileName = md5(uniqid()) . $imageFile->getClientOriginalName();
-        $imageFileName = str_replace(" ","",$imageFileName);
-        $imagePath = "/public/uploaded-pictures/";
-
-        $fullPath = $this->getParameter('kernel.project_dir') . $imagePath;
-
-        $imageFile->move($fullPath, $imageFileName);
-        $user->setPicture("/uploaded-videos/" . $imageFileName);
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        //2- Create a new property in Course entity "video" , then save every video link in the associated course
-        return $this->json(["message" => $imageFile->getClientOriginalName() . " image uploaded successfully!"], 201);
-    }
 
 }

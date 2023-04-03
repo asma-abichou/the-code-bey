@@ -10,10 +10,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+
 
 #[Route('/api/student')]
 class StudentController extends AbstractController
@@ -21,6 +18,7 @@ class StudentController extends AbstractController
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
+
     // Api to subscribe student to course
     #[Route('/subscribe/{courseId}', name: 'subscribe_to_course', methods: ['GET'])]
     public function subscribeToCourse(Request $request, $courseId, CourseRepository $courseRepository): Response
@@ -104,16 +102,13 @@ class StudentController extends AbstractController
     #[Route('/profile/edit/{id}', name: 'profile_edit', methods: ['PUT'])]
     public function profileEdit(Request $request, $id, UserRepository $userRepository): Response
     {
-        $currentUser = $this->getUser();
-
+        $currentUserId = $this->getUser()->getId();
         if(!$this->isGranted("ROLE_STUDENT"))
         {
             return $this->json(["message" => "You are not a student and you are not authorized !"], 403);
         }
-        $user = $userRepository->find($id);
+        $user = $userRepository->find($currentUserId);
         $content = json_decode($request->getContent(), true);
-        $user->setEmail($content["email"]);
-        $user->setPassword($content["password"]);
         $user->setFirstName($content["firstName"]);
         $user->setLastName($content["lastName"]);
         $this->entityManager->persist($user);
@@ -132,14 +127,14 @@ class StudentController extends AbstractController
             return $this->json(["message" => "There is no student with that ID"]);
         }
 
-
         /* @var UploadedFile $imageFile */
         $imageFile = $request->files->get('myPicture');
-        //1- Verify file extension , it must be .mp4
+
 
         if ($imageFile->getClientOriginalExtension() !== 'jpg') {
             return $this->json(["message" => "Invalid file format. Please upload a .jpg file."], 400);
         }
+
         $imageFileName = md5(uniqid()) . $imageFile->getClientOriginalName();
         $imageFileName = str_replace(" ","",$imageFileName);
         $imagePath = "/public/uploaded-pictures/";
@@ -147,7 +142,7 @@ class StudentController extends AbstractController
         $fullPath = $this->getParameter('kernel.project_dir') . $imagePath;
 
         $imageFile->move($fullPath, $imageFileName);
-        $user->setPicture("/uploaded-videos/" . $imageFileName);
+        $user->setPicture("/uploaded-pictures/" . $imageFileName);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -22,9 +23,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups('edit-profile')]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    #[Groups('edit-profile')]
     #[ORM\Column]
     private array $roles = [];
 
@@ -37,12 +40,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
 
+    #[Groups('edit-profile')]
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
+    #[Groups('edit-profile')]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
+    #[Groups('edit-profile')]
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $dateOfBirth = null;
 
@@ -55,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinTable(name: 'course_student')]
     private Collection $subscribedCourses;
 
-    #[Groups('main')]
+    #[Groups('edit-profile')]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
