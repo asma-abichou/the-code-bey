@@ -17,8 +17,8 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import img from '../../../static/images/yassouna.jpg'
 import { Link } from 'react-router-dom';
-import Footer from '../../../components/footer';
-import addcourse from '../Coursesf/addcourse';
+
+
 const Profil = () => {
   
     const drawerWidth = 240;

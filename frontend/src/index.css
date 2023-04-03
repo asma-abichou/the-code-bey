@@ -137,5 +137,21 @@ select{
 font-size: 15px;
 padding: 0.2rem;
 border-radius: 0.5rem;
+margin-right: 54px;
+}
+.menu-links ul .search-bar input[type="text"] {
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #f0f0f0;
+  color: #555;
+  width: 200px;
+  transition: all 0.3s ease;
+}
 
+.menu-links ul .search-bar input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+  width: 300px;
 }

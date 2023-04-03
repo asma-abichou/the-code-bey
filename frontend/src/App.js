@@ -14,7 +14,7 @@ import RequireAuth from './components/RequireAuth';
 import { Application } from 'react-rainbow-components';
 import { Route, Routes } from "react-router-dom";
 
-import ProfileCard from "./layouts/profile/ProfileCard";
+
 import Addcourse from "./layouts/Trainer/Coursesf/addcourse";
 import ForgotPassword from "./components/Resetpassword";
 import About from "./layouts/About/About";
@@ -31,7 +31,7 @@ export default function App() {
       <Route path="/" element={<MainLayout />}>
         <Route path="login" element={<Login />} />
         {/* <Route path="AddCourseForm" element={<AddCourseForm/>} /> */}
-        <Route path="profile" element={<ProfileCard />} />
+       
         <Route path="Reset" element={<ForgotPassword/>} />
         <Route path="About" element={<About/>} />
 
