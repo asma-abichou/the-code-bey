@@ -9,6 +9,7 @@ import Footer from "../components/footer";
 
 
 const MainLayout = () => {
+  const [searchTerm, setSearchTerm] = useState('')
     const main = useRef();
     const [animationIsFinished, setAnimationIsFinished] = useState(false) ;
     const { setAuth } = useContext(AuthContext);
@@ -65,6 +66,9 @@ const MainLayout = () => {
           <Link to="/courses"><li>forum</li></Link> 
           <Link to="/About"><li>About</li></Link> 
           {auth.user && <li id="logout" onClick={logout} >Logout</li>}
+          <li className="search-bar">
+                <input type="text" placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              </li>
         </ul>
       </div>
 

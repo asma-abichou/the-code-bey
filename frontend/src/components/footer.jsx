@@ -1,6 +1,6 @@
 import React from "react";
 import "./Footer.css"; //import css style
-import logo from "../whitesvg.svg";
+import logo from "../hawa.png";
 import ScrollToTop from "react-scroll-to-top";
 
 const Footer = () => {

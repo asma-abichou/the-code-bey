@@ -3,6 +3,7 @@
     justify-content: center;
     align-items: center;
     height: 103vh;
+    --border-size: 3px;
   }
   
  .form-container  form {
@@ -31,9 +32,17 @@
   }
   
   .form-container input[type="text"],
-  select,
+  
   textarea,
   input[type="file"] {
+    flex: 1;
+    margin-left: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .form-container select
+  {
     flex: 1;
     margin-left: 10px;
     padding: 5px;

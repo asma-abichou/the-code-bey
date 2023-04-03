@@ -1,5 +1,5 @@
 import React from "react";
-import "./membre.css"; //importin css style
+import "./Member.css"; //importin css style
 import { Card } from "react-bootstrap"; //importing BOOTSTRAP
 
 const Member = (props) => {

@@ -26,10 +26,10 @@ const Addcourse = () => {
     };
   
     return (
-      <div>
+      <div >
 
-      <div className="form-container">
-        <form onSubmit={handleSubmit}>
+      <div className="form-container box">
+        <form  onSubmit={handleSubmit}>
         <div className="form-title">
   <h1>Add Course</h1>
 </div>
