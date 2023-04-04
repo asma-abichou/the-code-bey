@@ -6,6 +6,7 @@
 /config/secrets/prod/prod.decrypt.private.php
 /var/
 /vendor/
+/public/
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###

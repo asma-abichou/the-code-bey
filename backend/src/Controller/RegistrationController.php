@@ -50,22 +50,7 @@ class RegistrationController extends AbstractController
         return $this->json($user, 200);
     }
 
-    public function passwordValidation(User $user): array
-    {
-        $errors = $this->validator->validate($user);
-        $output = [];
-        if(count($errors) > 0)
-        {
-            $count = 0;
-            foreach ($errors as $error)
-            {
-                $count++;
-                $output["Error" . $count] = $error->getMessage();
-            }
 
-        }
-        return $output;
-    }
     public function createUser(Request $request, array $roles): array|User
     {
         $content = json_decode($request->getContent(), true );
@@ -98,4 +83,22 @@ class RegistrationController extends AbstractController
         $user->setPassword($password);
         return $user;
     }
+    public function passwordValidation(User $user): array
+    {
+        $errors = $this->validator->validate($user);
+        $output = [];
+        if(count($errors) > 0)
+        {
+            $count = 0;
+            foreach ($errors as $error)
+            {
+                $count++;
+                $output["Error" . $count] = $error->getMessage();
+            }
+
+        }
+        return $output;
+    }
+
+
 }

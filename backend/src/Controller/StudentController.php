@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Repository\CourseRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +19,7 @@ class StudentController extends AbstractController
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
+
 
     // Api to subscribe student to course
     #[Route('/subscribe/{courseId}', name: 'subscribe_to_course', methods: ['GET'])]
@@ -51,21 +53,7 @@ class StudentController extends AbstractController
             return $this->json(["message" => "You are not a student and you are not authorized to view subscribed courses!"], 403);
         }
         $filters = $request->query->all(); // get all query parameters as an associative array
-
-        $subscribedCourses = $currentUser->getSubscribedCourses();
-
-        // apply filters
-        if (isset($filters['start_date'])) {
-            $subscribedCourses = $subscribedCourses->filter(function($course) use ($filters) {
-                return $course->getStartDate() == new \DateTime($filters['start_date']);
-            });
-        }
-        if (isset($filters['category'])) {
-            $subscribedCourses = $subscribedCourses->filter(function($course) use ($filters) {
-                return $course->getCategory() == $filters['category'];
-            });
-        }
-
+         //get the subscribed courses
         $subscribedCourses = $currentUser->getSubscribedCourses();
 
         if (count($subscribedCourses) === 0) {
@@ -99,56 +87,46 @@ class StudentController extends AbstractController
     }
 
 
-    #[Route('/profile/edit/{id}', name: 'profile_edit', methods: ['PUT'])]
-    public function profileEdit(Request $request, $id, UserRepository $userRepository): Response
+    #[Route('/profile/edit', name: 'student_profile_edit', methods: ['POST'])]
+    public function profileEdit(Request $request , UserRepository $userRepository): Response
     {
-        $currentUserId = $this->getUser()->getId();
+
+        $currentUser = $this->getUser();
+        $currentUserId = $currentUser->getId();
+
         if(!$this->isGranted("ROLE_STUDENT"))
         {
             return $this->json(["message" => "You are not a student and you are not authorized !"], 403);
         }
+
         $user = $userRepository->find($currentUserId);
-        $content = json_decode($request->getContent(), true);
+
+        $content = $request ->request->all();
         $user->setFirstName($content["firstName"]);
         $user->setLastName($content["lastName"]);
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-        return $this->json(["message" => $user->getUserIdentifier(). " user edit  successfully!"], 201);
-    }
 
+         $pictureFile = $request->files->get('myPicture');
 
-
-    #[Route('/image/{idStudent}/upload', name: 'user_image_upload', methods: ['POST'])]
-    public function userImageUpload(Request $request, $id, userRepository $userRepository): Response
-    {
-        $user = $userRepository->find($id);
-
-        if (!$user) {
-            return $this->json(["message" => "There is no student with that ID"]);
+        if ($pictureFile){
+            //generate a name  for picture
+            $pictureFileName = md5(uniqid ()). $pictureFile->getClientOriginalName();
+            //remove space from the name picture
+            $pictureFileName = str_replace(" ", "", $pictureFileName);
+            $picturePath =  "/public/uploaded-pictures/";
+            // get full path where to upload the picture
+            $fullPath = $this->getParameter('kernel.project_dir') . $picturePath;
+            // uploading the picture to the folder
+            $pictureFile->move($fullPath, $pictureFileName);
+            // Saving picture path in the database
+            $user->setPicture("/uploaded-pictures/" . $pictureFileName);
         }
-
-        /* @var UploadedFile $imageFile */
-        $imageFile = $request->files->get('myPicture');
-
-
-        if ($imageFile->getClientOriginalExtension() !== 'jpg') {
-            return $this->json(["message" => "Invalid file format. Please upload a .jpg file."], 400);
-        }
-
-        $imageFileName = md5(uniqid()) . $imageFile->getClientOriginalName();
-        $imageFileName = str_replace(" ","",$imageFileName);
-        $imagePath = "/public/uploaded-pictures/";
-
-        $fullPath = $this->getParameter('kernel.project_dir') . $imagePath;
-
-        $imageFile->move($fullPath, $imageFileName);
-        $user->setPicture("/uploaded-pictures/" . $imageFileName);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+        return $this->json($user, 200, [], ['groups' => ['edit-profile']]);
 
-        //2- Create a new property in Course entity "video" , then save every video link in the associated course
-        return $this->json(["message" => $imageFile->getClientOriginalName() . " image uploaded successfully!"], 201);
     }
+
+
 
 }

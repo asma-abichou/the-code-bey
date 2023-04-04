@@ -18,6 +18,7 @@ class CategoryController extends AbstractController
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
+
     #[Route('/category', name: 'list', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository): Response
     {
@@ -30,16 +31,16 @@ class CategoryController extends AbstractController
     public function createCategory(Request $request): Response
     {
         // Get the request content as an array
-        $requestData = json_decode($request->getContent(), true);
+        $request = json_decode($request->getContent(), true);
 
         // Check if the title field is empty or null
-        if (empty($requestData['title']) || is_null ($requestData ['title'])) {
+        if (empty($request['title']) || is_null ($request['title'])) {
             return $this->json(['error' => 'Title field cannot be empty'], 400);
         }
 
         // Create a new ClassCategory object with the request data
         $category = new Category();
-        $category->setTitle($requestData['title']);
+        $category->setTitle($request['title']);
         // Save the new category to the database
         $this->entityManager->persist($category);
         $this->entityManager->flush();
@@ -64,6 +65,7 @@ class CategoryController extends AbstractController
         if (!$category) {
             return $this->json(["message" => "There is no category with that ID"]);
         }
+        // Get the request content as an array
         $content = json_decode($request->getContent(), true);
         $category->setTitle($content["title"]);
         $this->entityManager->persist($category);
@@ -79,6 +81,7 @@ class CategoryController extends AbstractController
         if (!$category) {
             return $this->json(["message" => "There is no category with that ID"]);
         }
+        // delete category with the remove function
         $this->entityManager->remove($category);
         $this->entityManager->flush();
         return new Response('The category with ID '.$id.' has been deleted');

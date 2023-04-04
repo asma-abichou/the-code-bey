@@ -72,6 +72,7 @@ class TeacherController extends AbstractController
         $user->setFirstName($content["firstName"]);
         $user->setLastName($content["lastName"]);
 
+
         $profilePictureFile = $request->files->get('profilePicture');
         if ($profilePictureFile) {
             // Generate random name for the picture
