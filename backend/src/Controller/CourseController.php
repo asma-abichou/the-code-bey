@@ -11,11 +11,12 @@ use JamesHeinrich\GetID3\Module\Tag\ID3v2;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTimeImmutable;
-use FFMpeg\FFProbe;
+
 
 #[Route('/api/course')]
 class CourseController extends AbstractController
@@ -48,24 +49,9 @@ class CourseController extends AbstractController
         $description = $content["description"];
         /* @var UploadedFile $videoFile */
         $videoFile = $request->files->get('myvideo');
-        //1- Verify file extension , it must be .mp4
-        if ($videoFile->getClientOriginalExtension() !== 'mp4') {
-            return $this->json(["message" => "Invalid file format. Please upload a .mp4 file."], 400);
-        }
-        // generate random file name
-        $videoFileName = md5(uniqid()) . $videoFile->getClientOriginalName();
-        // Remove spaces from video file name
-        $videoFileName = str_replace(" ","",$videoFileName);
-        $videoPath = "/public/uploaded-videos/";
-        // Get video full path
-        $fullPath = $this->getParameter('kernel.project_dir') . $videoPath;
-        // Upload video
-        $videoFile->move($fullPath, $videoFileName);
-        // Get video duration
-        $getID3 = new GetID3();
-        $videoFileInfos = $getID3->analyze($fullPath . $videoFileName);
-        $duration = $videoFileInfos["playtime_string"];
+
         //
+        $uploadedVideo = $this->videoUpload($videoFile);
         $newCourse = new Course();
         // link course to the authenticated user
         $newCourse->setTeacher($currentUser);
@@ -73,8 +59,8 @@ class CourseController extends AbstractController
         $newCourse->setCategory($category);
         $newCourse->setTitle($title);
         $newCourse->setDescription($description);
-        $newCourse->setVideo("/uploaded-videos/" . $videoFileName);
-        $newCourse->setDuration($duration);
+        $newCourse->setVideo($uploadedVideo["path"]);
+        $newCourse->setDuration($uploadedVideo["duration"]);
         $newCourse->setCreatedAt(new DateTimeImmutable());
         $newCourse->setUpdatedAt(new DateTimeImmutable());
         $this->entityManager->persist($newCourse);
@@ -113,26 +99,35 @@ class CourseController extends AbstractController
         return new Response('The course with ID '.$id.' has been deleted');
     }
 
-    #[Route('/{id}', name: 'update_course', methods: ['PUT'])]
+    #[Route('/{id}/update', name: 'update_course', methods: ['POST'])]
     public function updateCourse(CourseRepository $courseRepository, $id, Request $request): Response
     {
         if (!$this->isGranted("ROLE_TEACHER"))
         {
             return $this->json(["message" => "You are not authorized to update this course"], 403);
         }
-
         $course = $courseRepository->find($id);
         if (!$course) {
             return $this->json(["message" => "There is no course with that ID"]);
         }
         // Get the request content as an array
-        $content = json_decode($request->getContent(), true);
-        $course->setTitle($content["title"]);
-        $course->setDescription($content["description"]);
+        $content = $request->request->all();
+        /* @var UploadedFile $videoFile */
+        $videoFile = $request->files->get('myvideo');
+        if($videoFile)
+        {
+            $uploadedVideo = $this->videoUpload($videoFile);
+        }
+        if(isset($content["title"])) $course->setTitle($content["title"]);
+        if(isset($content["description"])) $course->setDescription($content["description"]);
         $course->setUpdatedAt(new DateTimeImmutable());
+        if($videoFile)
+        {
+            $course->setVideo($uploadedVideo["path"]);
+            $course->setDuration($uploadedVideo["duration"]);
+        }
         $this->entityManager->persist($course);
         $this->entityManager->flush();
-        $this->saveData($course);
         return $this->json($course, 200, [], ['groups' => ['main']]);
     }
 
@@ -147,48 +142,33 @@ class CourseController extends AbstractController
         }
 
         $courses = $courseRepository->findCoursesBySearchFilter($criterias);
-        dd($courses);
 
+        return $this->json($courses, 200, [], ['groups' => ['main']]);
     }
 
-
-    #[Route('/video/{id}/upload', name: 'course_video_upload', methods: ['POST'])]
-    public function courseVideoUpload(Request $request, $id, CourseRepository $courseRepository): Response
+    private function videoUpload($videoFile): array|JsonResponse
     {
-        $course = $courseRepository->find($id);
-        if (!$course) {
-            return $this->json(["message" => "There is no course with that ID"]);
-        }
-        /* @var UploadedFile $videoFile */
-        $videoFile = $request->files->get('myvideo');
-
         //1- Verify file extension , it must be .mp4
-
         if ($videoFile->getClientOriginalExtension() !== 'mp4') {
             return $this->json(["message" => "Invalid file format. Please upload a .mp4 file."], 400);
         }
+        // generate random file name
         $videoFileName = md5(uniqid()) . $videoFile->getClientOriginalName();
+        // Remove spaces from video file name
         $videoFileName = str_replace(" ","",$videoFileName);
         $videoPath = "/public/uploaded-videos/";
-
+        // Get video full path
         $fullPath = $this->getParameter('kernel.project_dir') . $videoPath;
+        // Upload video
         $videoFile->move($fullPath, $videoFileName);
         // Get video duration
-
-        /*$getID3 = new GetID3();
+        $getID3 = new GetID3();
         $videoFileInfos = $getID3->analyze($fullPath . $videoFileName);
         $duration = $videoFileInfos["playtime_string"];
-        dd($duration);*/
-
-        //
-        $course->setVideo("/uploaded-videos/" . $videoFileName);
-        $this->entityManager->persist($course);
-        $this->entityManager->flush();
-
-        //2- Create a new property in Course entity "video" , then save every video link in the associated course
-        return $this->json(["message" => $videoFile->getClientOriginalName() . " video uploaded successfully!"], 201);
+        return [
+            "path" => "/uploaded-videos/" . $videoFileName,
+            "duration" => $duration
+        ];
     }
-
-
 
 }
