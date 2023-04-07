@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Body from "./Body";
 import Second from "../components/second";
 import useAuth from "../hooks/useAuth";
-
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/react';
 import svg from "../whitesvg.svg" ;
 
 
@@ -96,9 +96,14 @@ export default function Home() {
           cubeISReady && <Second/>
 
         }
+       
          {
           cubeISReady && <Footer/>
         }
+
+
+
+        
     </div>
 
     

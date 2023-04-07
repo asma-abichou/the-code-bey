@@ -4,6 +4,7 @@
     align-items: center;
     height: 103vh;
     --border-size: 3px;
+    background-image: url(C:\Users\Yessine-PC\Desktop\New folder\the-code-bey\frontend\src\static\images\pp3.png);
   }
   
  .form-container  form {
@@ -87,4 +88,9 @@
     position: absolute;
     bottom: 53px;
     left: 148px;
+}
+
+.form2 {
+  border-radius: 15px!important;
+  border: 3px solid #ccc !important;
 }

@@ -5,7 +5,27 @@ import  { Fragment, useState } from 'react'
 import { Button,Grid, TextField,MenuItem,Snackbar,InputAdornment, TextareaAutosize,Box,LinearProgress, Typography } from '@mui/material';
 import './addcourse.css'
 import MuiAlert from '@mui/material/Alert';
+import axios from '../../../api/axios';
 const Addcourse = () => {
+
+  const sendData = () => {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('period', period);
+    formData.append('difficulty', difficulty);
+    formData.append('discipline', discipline);
+    formData.append('description', description);
+    formData.append('file', file);
+    
+    axios.post('https://example.com/api/courses', formData)
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+  
 
   const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
   const showNav = () => setAnimationIsFinished(true);
@@ -22,14 +42,14 @@ const Addcourse = () => {
 
     const handleSubmit = (event) => {
       event.preventDefault();
-      // Envoyer le formulaire à un serveur ou effectuer une autre action ici
+      sendData();
     };
-  
+    
     return (
       <div >
 
       <div className="form-container box">
-        <form  onSubmit={handleSubmit}>
+        <form className='form2'  onSubmit={handleSubmit}>
         <div className="form-title">
   <h1>Add Course</h1>
 </div>
@@ -91,7 +111,7 @@ const Addcourse = () => {
             />
           </div>
           <div className="form-row">
-            <button type="submit">Soumettre</button>
+            <button type="submit" onClick={sendData}>Soumettre</button>
           </div>
         </form>  
         <a href="#" className="go-back-link" onClick={() => window.history.back()}>

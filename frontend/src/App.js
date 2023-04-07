@@ -13,8 +13,8 @@ import Unauthorized from './components/Unauthorized';
 import RequireAuth from './components/RequireAuth';
 import { Application } from 'react-rainbow-components';
 import { Route, Routes } from "react-router-dom";
-
-
+import Body from "./layouts/Body";
+import UpdateProfile from "./layouts/Userprofil/UpdateProfil";
 import Addcourse from "./layouts/Trainer/Coursesf/addcourse";
 import ForgotPassword from "./components/Resetpassword";
 import About from "./layouts/About/About";
@@ -42,7 +42,7 @@ export default function App() {
         <Route element={<RequireAuth allowedRoles={['User', 'Admin']} />}>
           <Route path="courses" element={<Courses />} />
         </Route>
-        <Route element={<RequireAuth allowedRoles={['Admin']} />}>
+        <Route element={<RequireAuth allowedRoles={['User']} />}>
           <Route path="courses/:courseName" element={<Course />} />
           <Route path="courses/:courseName/:courseID" element={<CoursVid />} />
         </Route>
@@ -51,9 +51,10 @@ export default function App() {
         </Route>
         <Route element={<RequireAuth allowedRoles={['User']} />}>
           <Route path="profil" element={<Profil />} />
+          <Route path="Addcourse" element={<Addcourse/>} />
         </Route>
         <Route path="Addcourse" element={<Addcourse/>} />
-        
+        <Route path="update" element={<UpdateProfile/>} />
       </Route>
     
 

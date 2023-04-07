@@ -7,7 +7,6 @@ import AuthContext from "../context/AuthProvider";
 import useAuth from "../hooks/useAuth";
 import Footer from "../components/footer";
 
-
 const MainLayout = () => {
   const [searchTerm, setSearchTerm] = useState('')
     const main = useRef();
@@ -67,7 +66,8 @@ const MainLayout = () => {
           <Link to="/About"><li>About</li></Link> 
           {auth.user && <li id="logout" onClick={logout} >Logout</li>}
           <li className="search-bar">
-                <input type="text" placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+          <input type="Search" placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} class="input-style" />
+
               </li>
         </ul>
       </div>

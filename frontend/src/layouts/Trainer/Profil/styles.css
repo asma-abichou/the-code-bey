@@ -7,10 +7,9 @@
 
 .avatar{
     position: absolute !important;
-    top: 173px;
-    left: 546px;
     z-index: 1;
     border: 8px solid white;
+    transform: translate(26px, -94px);
 }
 
 .trainer-name{

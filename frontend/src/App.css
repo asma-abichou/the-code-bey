@@ -465,3 +465,8 @@ transform:translateY(14px)
   
 }
 
+.navbar {  display: flex;
+}
+.search-bar:hover {
+  background: #081730 !important;
+}

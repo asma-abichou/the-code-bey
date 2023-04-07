@@ -36,7 +36,7 @@ const Login =() => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("submit");
-            const response = await axios.post("http://127.0.0.1:8000/users/login/",
+            const response = await axios.post("http://127.0.0.1:8000/api/login",
                 JSON.stringify({'username':user, 'password':pwd}),
                 {
                     headers: { 'Content-Type': 'application/json' }

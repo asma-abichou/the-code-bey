@@ -1,0 +1,40 @@
+.im2-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .im2 {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .im2-label {
+    margin-left: 10px;
+    font-size: 16px;
+    color: #333;
+  }
+  .avatar2-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .avatar2 {
+    width: 138px;
+    height: 146px;
+    border-radius: 50%;
+    margin-right: 20px;
+    margin-left: 122px;
+  }
+  
+  .avatar2-label {
+    margin-left: -14px;
+    margin-top: 127px;
+  }
+  
+  .avatar2-input {
+    display: none;
+  }
+  
