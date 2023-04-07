@@ -50,7 +50,7 @@ class CourseController extends AbstractController
         /* @var UploadedFile $videoFile */
         $videoFile = $request->files->get('myvideo');
 
-        //
+
         $uploadedVideo = $this->videoUpload($videoFile);
         $newCourse = new Course();
         // link course to the authenticated user
