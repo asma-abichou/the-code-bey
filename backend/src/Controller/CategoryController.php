@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use OpenApi\Attributes as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 #[Route('/api')]
 class CategoryController extends AbstractController
@@ -19,7 +21,17 @@ class CategoryController extends AbstractController
     {
     }
 
+
     #[Route('/category', name: 'list', methods: ['GET'])]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the list of categories',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: Category::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'Category')]
     public function index(CategoryRepository $categoryRepository): Response
     {
         return $this->json($categoryRepository->findAll(), 200, [], ['groups' => ['main']]);
@@ -28,6 +40,24 @@ class CategoryController extends AbstractController
 
 
     #[Route('/category', name: 'create', methods: ['POST'])]
+    #[OA\RequestBody(
+        description: 'Creates new category',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'title', type:'string'),
+            ],
+            example: ['title' => 'Fullstack development']
+        )
+    )]
+    #[OA\Response(
+        response: 201,
+        description: 'Creates new category',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: Category::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'Category')]
     public function createCategory(Request $request): Response
     {
         // Get the request content as an array
