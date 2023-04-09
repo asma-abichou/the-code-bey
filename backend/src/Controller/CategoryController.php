@@ -95,6 +95,7 @@ class CategoryController extends AbstractController
 
 
     #[Route('/category/{id}', name: 'update_by_id', methods: ['PUT'])]
+    #[OA\Put(description: 'Update a category')]
     #[OA\RequestBody(
         description: 'Update a category by Id',
         content: new OA\JsonContent(
@@ -126,6 +127,13 @@ class CategoryController extends AbstractController
 
 
     #[Route('/category/{id}', name: 'delete', methods: ['DELETE'])]
+    #[OA\Delete(description: 'Deletes a category')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the deleted category',
+        content: new Model(type: Category::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'Category')]
     public function deleteCategory(CategoryRepository $categoryRepository, $id): Response
     {
         $category = $categoryRepository->find($id);
@@ -135,7 +143,7 @@ class CategoryController extends AbstractController
         // delete category with the remove function
         $this->entityManager->remove($category);
         $this->entityManager->flush();
-        return new Response('The category with ID '.$id.' has been deleted');
+        return $this->json($category, 200, [], ['groups' => ['main']]);
 
     }
    /* public function calculateTotalHours(): int

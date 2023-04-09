@@ -2,12 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Course;
 use App\Repository\CategoryRepository;
 use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JamesHeinrich\GetID3\GetID3;
 use JamesHeinrich\GetID3\Module\Tag\ID3v2;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Attributes\Get;
+use phpDocumentor\Reflection\DocBlock\Description;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -16,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use DateTimeImmutable;
-
+use OpenApi\Attributes as OA;
 
 #[Route('/api/course')]
 class CourseController extends AbstractController
@@ -26,6 +30,16 @@ class CourseController extends AbstractController
     }
 
     #[Route('', name: 'list_course', methods: ['GET'])]
+    #[OA\Get(description: 'get the list of all courses')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the list of courses',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: Course::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'Course')]
     public function index(CourseRepository $courseRepository): Response
     {
         return $this->json($courseRepository->findAll(), 200, [], ['groups' => ['main']]);
@@ -33,6 +47,29 @@ class CourseController extends AbstractController
 
     // Api to add a course
     #[Route('/{categoryId}', name: 'add_course', methods: ['POST'])]
+    #[OA\Post(description: 'Creates a new course')]
+    #[OA\RequestBody(
+        description: 'Creates new course',
+        content: [new OA\MediaType(mediaType: "multipart/form-data" , schema: new OA\Schema(
+            properties: [
+                new OA\Property(property: 'title', type:'string'),
+                new OA\Property(property: 'description', type:'string'),
+                new OA\Property(property: 'duration', type:'string'),
+                new OA\Property(property: "video", type: "file", format:"binary")
+            ],
+            example: ['title' => 'Fullstack development',
+                      'description' => 'this is a fullstack development course',
+                      'duration' => '2 hours',
+                      'video' => '']
+        ))]
+    )]
+
+    #[OA\Response(
+        response : 201,
+        description: 'Returns the created course',
+        content: new Model(type: Course::class, groups: ['main'])
+    )]
+    #[OA\Tag(name:'Course')]
     public function addCourse(Request $request, $categoryId, CategoryRepository $categoryRepository): Response
     {
         if(!$this->isGranted("ROLE_TEACHER"))
