@@ -51,7 +51,7 @@ class CategoryController extends AbstractController
     )]
     #[OA\Response(
         response: 201,
-        description: 'Creates new category',
+        description: 'Returns the created category',
         content: new OA\JsonContent(
             type: 'array',
             items: new OA\Items(ref: new Model(type: Category::class, groups: ['main']))
@@ -78,9 +78,15 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/{id}', name: 'get_by_id', methods: ['GET'])]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns a category by Id',
+        content: new Model(type: Category::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'Category')]
     public function getCategoryById(CategoryRepository $categoryRepository, $id,Request $request): Response
     {
-        $category = $categoryRepository->findAll();
+        $category = $categoryRepository->find($id);
         if (!$category) {
             return $this->json(["message" => "There is no category with that ID"]);
         }
@@ -89,6 +95,21 @@ class CategoryController extends AbstractController
 
 
     #[Route('/category/{id}', name: 'update_by_id', methods: ['PUT'])]
+    #[OA\RequestBody(
+        description: 'Update a category by Id',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'title', type:'string'),
+            ],
+            example: ['title' => 'Fullstack development']
+        )
+    )]
+     #[OA\Response(
+         response: 200,
+         description: 'Returns the updated category',
+         content: new Model(type: Category::class, groups: ['main'])
+     )]
+    #[OA\Tag(name: 'Category')]
     public function updateCategoryById(CategoryRepository $categoryRepository, $id,Request $request): Response
     {
         $category = $categoryRepository->find($id);
