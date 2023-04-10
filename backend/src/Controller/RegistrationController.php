@@ -28,39 +28,46 @@ class RegistrationController extends AbstractController
     {
     }
 
-    #[Route('/register/student', name: 'register_student', methods: ['POST'])]
+    #[Route('/register', name: 'register', methods: ['POST'])]
     #[OA\RequestBody(
-        description: 'register a new student ',
+        description: 'register a new user',
         content: new OA\JsonContent(
             properties: [
-
+                new OA\Property(property: 'username', type:'string'),
                 new OA\Property(property: 'email', type:'string'),
                 new OA\Property(property: 'password', type:'string'),
-                new OA\Property(property: 'confirmPassword', type:'string'),
+                new OA\Property(property: 'role', type:'string'),
                 new OA\Property(property: 'firstName', type:'string'),
-                new OA\Property(property: 'lastName', type:'string'),
-                new OA\Property(property: 'dateOfBirth', type:'date'),
-
-            ], example: [ 'email' => 'asmaa123@gmail.com',
-                         'password' => '22222@Ab',
-                         'confirmPassword' => '22222@Ab',
-                         'firstName' => 'asma',
-                         'lastName' => 'abichou',
-                         'dateOfBirth' => '06-08-1999'
-
-        ]
+                new OA\Property(property: 'lastName', type:'string')
+            ],
+            example: [
+                'username' => 'asma_student',
+                'email' => 'asmaa123@gmail.com',
+                'password' => 'AZ123456az#',
+                'role' => 'student',
+                'firstName' => 'asma',
+                'lastName' => 'abichou',
+                ]
         )
     )]
     #[OA\Response(
         response: 200,
-        description: 'return a new  student registration ',
+        description: 'return the new created user',
         content: new Model(type: User::class)
-
     )]
     #[OA\Tag(name: 'register')]
-    public function registerStudent(Request $request): JsonResponse
+    public function register(Request $request): JsonResponse
     {
-        $user = $this->createUser($request, ["ROLE_STUDENT"]); // ['error' => 'Passwords do not match']
+        $content = json_decode($request->getContent(), true);
+        if($content["role"] === "student")
+        {
+            $user = $this->createUser($request, ["ROLE_STUDENT"]);
+        } elseif ($content["role"] === "teacher")
+        {
+            $user = $this->createUser($request, ["ROLE_TEACHER"]);
+        } else {
+            return $this->json(["message" => "role is not correct!"], 400);
+        }
         if(is_array($user))
         {
             return $this->json($user, 401);
@@ -69,71 +76,21 @@ class RegistrationController extends AbstractController
         $this->entityManager->flush();
         return $this->json($user, 200);
     }
-
-    #[Route('/register/teacher', name: 'register_teacher', methods: ['POST'])]
-    #[OA\RequestBody(
-        description: 'register a new teacher ',
-        content: new OA\JsonContent(
-            properties: [
-
-                new OA\Property(property: 'email', type:'string'),
-                new OA\Property(property: 'password', type:'string'),
-                new OA\Property(property: 'confirmPassword', type:'string'),
-                new OA\Property(property: 'firstName', type:'string'),
-                new OA\Property(property: 'lastName', type:'string'),
-                new OA\Property(property: 'dateOfBirth', type:'date'),
-
-            ], example: [ 'email' => 'asmaaaaa@gmail.com',
-                          'password' => '77777@Ab',
-                          'confirmPassword' => '77777@Ab',
-                          'firstName' => 'asma',
-                          'lastName' => 'abichou',
-                          'dateOfBirth' => '06-08-1999'
-
-            ]
-        )
-    )]
-    #[OA\Response(
-        response: 200,
-        description: 'return a new  teacher registration ',
-        content: new Model(type: User::class)
-
-    )]
-    #[OA\Tag(name: 'register')]
-    public function registerTeacher(Request $request): JsonResponse
-    {
-        $user = $this->createUser($request, ["ROLE_TEACHER"]);
-        if(is_array($user))
-        {
-            return $this->json($user, 401);
-        }
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-        return $this->json($user, 200);
-    }
-
 
     public function createUser(Request $request, array $roles): array|User
     {
         $content = json_decode($request->getContent(), true );
-        $email = $content["email"];
-        $plainPassword = $content["password"];
-        $confirmPassword = $content["confirmPassword"];
         $firstName = $content["firstName"];
         $lastName = $content["lastName"];
-        $dateOfBirth = new DateTimeImmutable($content["dateOfBirth"]);
-
-        // Validate that password and confirm password
-        if ($plainPassword !== $confirmPassword) {
-            return ['error' => 'Passwords do not match'];
-        }
+        $email = $content["email"];
+        $username = $content["username"];
+        $plainPassword = $content["password"];
         $user = new User();
-        $user->setEmail($email);
         $user->setFirstName($firstName);
         $user->setLastName($lastName);
-        $user->setDateOfBirth($dateOfBirth);
+        $user->setUsername($username);
+        $user->setEmail($email);
         $user->setRoles($roles);
-
         $user->setPassword($plainPassword);
         // Validate passwords (min characters 8 / alphanumeric)
         $arrayOfErrors = $this->passwordValidation($user); // array

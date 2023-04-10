@@ -12,13 +12,11 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use OpenApi\Attributes as OA;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[OA\Tag(name: 'Register')]
-
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email!')]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username!')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -29,6 +27,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups('edit-profile')]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $username = null;
 
     /**
      * @var string[]
@@ -54,12 +55,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups('edit-profile')]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
-
-    #[Groups('edit-profile')]
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $dateOfBirth = null;
-
-
 
     #[ORM\OneToMany(mappedBy: 'teacher', targetEntity: Course::class)]
     private Collection $createdCourses;
@@ -91,6 +86,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }
@@ -172,17 +179,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getDateOfBirth(): ?\DateTimeImmutable
-    {
-        return $this->dateOfBirth;
-    }
 
-    public function setDateOfBirth(\DateTimeImmutable $dateOfBirth): self
-    {
-        $this->dateOfBirth = $dateOfBirth;
-
-        return $this;
-    }
 
 
     /**
@@ -253,5 +250,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }
