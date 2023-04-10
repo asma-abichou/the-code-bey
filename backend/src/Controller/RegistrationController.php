@@ -4,14 +4,18 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use DateTimeImmutable;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use DateTimeImmutable;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use OpenApi\Attributes as OA;
+
 
 #[Route('/api')]
 class RegistrationController extends AbstractController
@@ -25,6 +29,35 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register/student', name: 'register_student', methods: ['POST'])]
+    #[OA\RequestBody(
+        description: 'register a new student ',
+        content: new OA\JsonContent(
+            properties: [
+
+                new OA\Property(property: 'email', type:'string'),
+                new OA\Property(property: 'password', type:'string'),
+                new OA\Property(property: 'confirmPassword', type:'string'),
+                new OA\Property(property: 'firstName', type:'string'),
+                new OA\Property(property: 'lastName', type:'string'),
+                new OA\Property(property: 'dateOfBirth', type:'date'),
+
+            ], example: [ 'email' => 'asmaa123@gmail.com',
+                         'password' => '22222@Ab',
+                         'confirmPassword' => '22222@Ab',
+                         'firstName' => 'asma',
+                         'lastName' => 'abichou',
+                         'dateOfBirth' => '06-08-1999'
+
+        ]
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'return a new  student registration ',
+        content: new Model(type: User::class)
+
+    )]
+    #[OA\Tag(name: 'register')]
     public function registerStudent(Request $request): JsonResponse
     {
         $user = $this->createUser($request, ["ROLE_STUDENT"]); // ['error' => 'Passwords do not match']
@@ -38,6 +71,35 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register/teacher', name: 'register_teacher', methods: ['POST'])]
+    #[OA\RequestBody(
+        description: 'register a new teacher ',
+        content: new OA\JsonContent(
+            properties: [
+
+                new OA\Property(property: 'email', type:'string'),
+                new OA\Property(property: 'password', type:'string'),
+                new OA\Property(property: 'confirmPassword', type:'string'),
+                new OA\Property(property: 'firstName', type:'string'),
+                new OA\Property(property: 'lastName', type:'string'),
+                new OA\Property(property: 'dateOfBirth', type:'date'),
+
+            ], example: [ 'email' => 'asmaaaaa@gmail.com',
+                          'password' => '77777@Ab',
+                          'confirmPassword' => '77777@Ab',
+                          'firstName' => 'asma',
+                          'lastName' => 'abichou',
+                          'dateOfBirth' => '06-08-1999'
+
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'return a new  teacher registration ',
+        content: new Model(type: User::class)
+
+    )]
+    #[OA\Tag(name: 'register')]
     public function registerTeacher(Request $request): JsonResponse
     {
         $user = $this->createUser($request, ["ROLE_TEACHER"]);

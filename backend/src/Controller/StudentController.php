@@ -6,12 +6,13 @@ use App\Entity\User;
 use App\Repository\CourseRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use OpenApi\Attributes as OA;
 
 #[Route('/api/student')]
 class StudentController extends AbstractController
@@ -23,6 +24,14 @@ class StudentController extends AbstractController
 
     // Api to subscribe student to course
     #[Route('/subscribe/{courseId}', name: 'subscribe_to_course', methods: ['GET'])]
+    #[OA\Get(description: 'Creates a new course subscribe')]
+
+    #[OA\Response(
+        response : 200,
+        description: 'Returns the subscribe course',
+        content: new Model(type: User::class, groups: ['main'])
+    )]
+    #[OA\Tag(name:'Student')]
     public function subscribeToCourse(Request $request, $courseId, CourseRepository $courseRepository): Response
     {
 
@@ -45,6 +54,14 @@ class StudentController extends AbstractController
 
     // create an api to get the student subscribed courses
     #[Route('/subscribed-courses', name: 'get_subscribed_courses', methods: ['GET'])]
+    #[OA\Get(description: 'get the list of  course subscribed')]
+
+    #[OA\Response(
+        response : 200,
+        description: 'Returns list of the subscribe course',
+        content: new Model(type: User::class, groups: ['main'])
+    )]
+    #[OA\Tag(name:'Student')]
     public function getStudentSubscribedCourses(Request $request, UserRepository $userRepository): Response
     {   $currentUser  = $this->getUser();
         // Check if the current user is a student
@@ -63,6 +80,16 @@ class StudentController extends AbstractController
     }
 
     #[Route('/profile', name: 'api_student_profile', methods: ['GET'])]
+    #[OA\Get(description: ' Student profile')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns student profile',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: User::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'Student')]
     public function studentProfile(Request $request, UserRepository $userRepository ): Response
     {
         $currentUser  = $this->getUser();
@@ -88,6 +115,28 @@ class StudentController extends AbstractController
 
 
     #[Route('/profile/edit', name: 'student_profile_edit', methods: ['POST'])]
+    #[OA\Post(description: 'edit student profile')]
+    #[OA\RequestBody(
+        description: 'edit some information of student profile ',
+        content: [new OA\MediaType(mediaType: "multipart/form-data" , schema: new OA\Schema(
+            properties: [
+                new OA\Property(property: 'firstName', type:'string'),
+                new OA\Property(property: 'lastName', type:'string'),
+                new OA\Property(property: "picture", type: "file", format:"binary")
+            ],
+            example: ['firstName' => 'Asma',
+                      'lastName' => 'Abichou',
+                      'picture' => '',
+                ]
+        ))]
+    )]
+
+    #[OA\Response(
+        response : 200,
+        description: 'Returns profile edited',
+        content: new Model(type: User::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'Student')]
     public function profileEdit(Request $request , UserRepository $userRepository): Response
     {
 

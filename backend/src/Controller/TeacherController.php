@@ -2,23 +2,37 @@
 
 namespace App\Controller;
 
+use App\Entity\Course;
+use App\Entity\User;
 use App\Repository\CourseRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use OpenApi\Attributes as OA;
+
 #[Route('/api/teacher')]
 class TeacherController extends AbstractController
 {
-
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
     // create an api to get the teacher created courses
     #[Route('/created-courses', name: 'get_courses', methods: ['GET'])]
+    #[OA\Get(description: ' get the teacher created courses')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the list of courses created by a teacher',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: Course::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'Teacher')]
     public function getTeacherCreatedCourses(Request $request, CourseRepository $courseRepository): Response
     {
         $currentUser = $this->getUser();
@@ -32,6 +46,16 @@ class TeacherController extends AbstractController
 
 
     #[Route('/profile', name: 'api_teacher_profile', methods: ['GET'])]
+    #[OA\Get(description: ' Teacher profile')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns teacher profile',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: User::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'Teacher')]
     public function teacherProfile(Request $request, UserRepository $userRepository ): Response
     {
         $currentUser  = $this->getUser();
@@ -58,6 +82,28 @@ class TeacherController extends AbstractController
 
 
     #[Route('/profile/edit', name: 'teacher_profile_edit', methods: ['POST'])]
+    #[OA\Post(description: 'edit teacher profile')]
+    #[OA\RequestBody(
+        description: 'edit some information of teacher profile ',
+        content: [new OA\MediaType(mediaType: "multipart/form-data" , schema: new OA\Schema(
+            properties: [
+                new OA\Property(property: 'firstName', type:'string'),
+                new OA\Property(property: 'lastName', type:'string'),
+                new OA\Property(property: "picture", type: "file", format:"binary")
+            ],
+            example: ['firstName' => 'Asma',
+                      'lastName' => 'Abichou',
+                      'picture' => '',
+            ]
+        ))]
+    )]
+
+    #[OA\Response(
+        response : 200,
+        description: 'Returns profile edited',
+        content: new Model(type: User::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'Teacher')]
     public function profileEdit(Request $request, UserRepository $userRepository): Response
     {
         $currentUser  = $this->getUser();
@@ -69,11 +115,13 @@ class TeacherController extends AbstractController
         }
         $user = $userRepository->find($currentUserId);
         $content = $request->request->all();
+
         $user->setFirstName($content["firstName"]);
         $user->setLastName($content["lastName"]);
 
 
         $profilePictureFile = $request->files->get('profilePicture');
+
         if ($profilePictureFile) {
             // Generate random name for the picture
             $pictureFileName = md5(uniqid()) . $profilePictureFile->getClientOriginalName();

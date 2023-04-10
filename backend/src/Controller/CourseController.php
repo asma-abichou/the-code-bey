@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
 use App\Entity\Course;
 use App\Repository\CategoryRepository;
 use App\Repository\CourseRepository;
@@ -10,10 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use JamesHeinrich\GetID3\GetID3;
 use JamesHeinrich\GetID3\Module\Tag\ID3v2;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use OpenApi\Attributes\Get;
-use phpDocumentor\Reflection\DocBlock\Description;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -107,6 +103,13 @@ class CourseController extends AbstractController
 
     // Get course by id
     #[Route('/{id}', name: 'get_course_by_id', methods: ['GET'])]
+    #[OA\Get(description: 'get a course')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns a course by Id',
+        content: new Model(type: Course::class, groups: ['main'])
+    )]
+    #[OA\Tag(name:'Course')]
     public function getCourseById(CourseRepository $courseRepository, $id): Response
     {
         $course = $courseRepository->find($id);
@@ -117,9 +120,17 @@ class CourseController extends AbstractController
             return $this->json(["message" => "There is no course with that ID"]);
         }
 
+
     }
 
     #[Route('/{id}', name: 'delete_course', methods: ['DELETE'])]
+    #[OA\Delete(description: 'Deletes a course')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the deleted category',
+        content: new Model(type: Course::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'Course')]
     public function deleteCourse(CourseRepository $courseRepository, $id): Response
     {
         $course = $courseRepository->find($id);
@@ -137,6 +148,28 @@ class CourseController extends AbstractController
     }
 
     #[Route('/{id}/update', name: 'update_course', methods: ['POST'])]
+    #[OA\Post(description: 'Update a course')]
+    #[OA\RequestBody(
+        description: 'Update a course by Id',
+        content: [new OA\MediaType(mediaType: "multipart/form-data" , schema: new OA\Schema(
+            properties: [
+                new OA\Property(property: "video", type: "file", format:"binary"),
+                new OA\Property(property: 'title', type:'string'),
+                new OA\Property(property: 'description', type:'string'),
+                new OA\Property(property: 'duration', type:'string')
+            ],
+            example: ['title' => 'Fullstack development',
+                      'description' => 'this is a fullstack development course',
+                      'duration' => '2 hours',
+                      'video' => '']
+        ))]
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the updated course',
+        content: new Model(type: Course::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'Course')]
     public function updateCourse(CourseRepository $courseRepository, $id, Request $request): Response
     {
         if (!$this->isGranted("ROLE_TEACHER"))
@@ -168,8 +201,29 @@ class CourseController extends AbstractController
         return $this->json($course, 200, [], ['groups' => ['main']]);
     }
 
-    // Search filter
+    // find courses by  search filter
     #[Route('/search/filter', name: 'course_search_filter', methods: ['POST'])]
+    #[OA\Post(description: 'find Courses By Search Filter')]
+    #[OA\RequestBody(
+        description: 'filter course ',
+        content: new OA\JsonContent(
+                properties: [
+                new OA\Property(property: 'title', type:'string'),
+                new OA\Property(property: 'description', type:'string'),
+                new OA\Property(property: 'duration', type:'string')
+            ],
+            example: ['title' => 'Fullstack development',
+                     /* 'description' => 'this is a fullstack development course',
+                      'duration' => '2 hours'*/
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the Courses By Search Filter',
+        content: new Model(type: Course::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'Course')]
     public function searchFilter(CourseRepository $courseRepository, Request $request): Response
     {
         $criterias = json_decode($request->getContent(), true);
@@ -182,6 +236,8 @@ class CourseController extends AbstractController
 
         return $this->json($courses, 200, [], ['groups' => ['main']]);
     }
+
+
 
     private function videoUpload($videoFile): array|JsonResponse
     {
