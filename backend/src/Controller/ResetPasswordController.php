@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -71,56 +72,48 @@ class ResetPasswordController extends AbstractController
             // loaded in a browser and potentially leaking the token to 3rd party JavaScript.
             $this->storeTokenInSession($token);
 
-            return $this->redirectToRoute('app_reset_password');
+           /* return $this->redirectToRoute('app_reset_password');*/
         }
 
         $token = $this->getTokenFromSession();
         if (null === $token) {
-            return $this->json(["message" => "No reset password token found"], 403);
+            return $this->redirect("https://www.facebook.com");
             /*throw $this->createNotFoundException('No reset password token found in the URL or in the session.');*/
         }
 
         try {
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         } catch (ResetPasswordExceptionInterface $e) {
-            return $this->json(["message" => "The link is not valid!"], 403);
-            /*$this->addFlash('reset_password_error', sprintf(
-                '%s - %s',
-                ResetPasswordExceptionInterface::MESSAGE_PROBLEM_VALIDATE,
-                $e->getReason()
-            ));
-
-            return $this->redirectToRoute('app_forgot_password_request');*/
+            return $this->redirect("https://www.facebook.com");
         }
-
         // The token is valid; allow the user to change their password.
-        /*return $this->json(["message" => "The link is not valid!"], 403);*/
-        $form = $this->createForm(ChangePasswordFormType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // A password reset token should be used only once, remove it.
-            $this->resetPasswordHelper->removeResetRequest($token);
-
-            // Encode(hash) the plain password, and set it.
-            $encodedPassword = $passwordHasher->hashPassword(
-                $user,
-                $form->get('plainPassword')->getData()
-            );
-
-            $user->setPassword($encodedPassword);
-            $this->entityManager->flush();
-
-            // The session is cleaned up after the password has been changed.
-            $this->cleanSessionAfterReset();
-
-            return $this->redirectToRoute('list_course');
-        }
-
-        return $this->render('reset_password/reset.html.twig', [
-            'resetForm' => $form->createView(),
-        ]);
+        return $this->redirect("https://www.google.com");
     }
+
+    #[Route('/change-password', name: 'app_change_password')]
+    public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    {
+        $content =  json_decode($request->getContent(), true);
+        $password = $content["password"];
+        $token = $this->getTokenFromSession();
+        try {
+            $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
+        } catch (ResetPasswordExceptionInterface $e) {
+            return $this->json(["Reset password link has expired!", 401]);
+        }
+        // A password reset token should be used only once, remove it.
+        $this->resetPasswordHelper->removeResetRequest($token);
+
+        // Encode(hash) the plain password, and set it.
+        $encodedPassword = $passwordHasher->hashPassword($user, $password);
+        $user->setPassword($encodedPassword);
+        $this->entityManager->flush();
+
+        // The session is cleaned up after the password has been changed.
+        $this->cleanSessionAfterReset();
+        return $this->json(["message" => "Your password has been changed successfully!"], 200);
+    }
+
 
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer)
     {
