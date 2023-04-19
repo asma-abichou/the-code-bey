@@ -4,11 +4,10 @@
     margin-top: 60px !important;
     
 }
-
-.avatar{
+.avatar {
     position: absolute !important;
     z-index: 1;
-    border: 8px solid white;
+    border: 16px solid white;
     transform: translate(26px, -94px);
 }
 

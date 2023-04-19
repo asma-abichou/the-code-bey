@@ -15,10 +15,14 @@ import TabPanel from '@mui/lab/TabPanel';
 import { Avatar, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import img from '../../../static/images/yassouna.jpg'
+
 import { Link } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 const UserProfil = () => {
+    const { auth } = useAuth();
+
+    const username = auth.user
   
     const drawerWidth = 240;
     const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
@@ -41,7 +45,7 @@ const UserProfil = () => {
         component="img"
         alt="green iguana"
         height="140"
-        image={img}
+        
     />
     <Avatar
         className="avatar"
@@ -51,11 +55,10 @@ const UserProfil = () => {
     />
     <CardContent>
         <Typography gutterBottom variant="h5" component="div" className='trainer-name'>
-           Red3i
+           {username}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+        {username} is a good teacher
         </Typography>
     </CardContent>
     <CardActions>

@@ -1,5 +1,5 @@
 import "../styles/layouts/Login.css"
-import {Link ,useOutletContext } from "react-router-dom";
+import {Link ,useOutletContext,useNavigate } from "react-router-dom";
 import { useRef, useState, useEffect ,useLayoutEffect} from "react";
 import axios from '../api/axios';
 
@@ -26,13 +26,13 @@ const Register = () => {
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
 
-	const [firstname, setfirstname] = useState('');
-    const [validFirstName, setValidFirstName] = useState(false);
-    const [firstnameFocus, setfirstnameFocus] = useState(false);
+	const [firstName, setfirstName] = useState('');
+    const [validfirstName, setValidfirstName] = useState(false);
+    const [firstNameFocus, setfirstNameFocus] = useState(false);
 
-	const [lastname, setlastname] = useState('');
-    const [validlastname, setValidlastname] = useState(false);
-    const [lastnameFocus, setlastnameFocus] = useState(false);
+	const [lastName, setlastName] = useState('');
+    const [validlastName, setValidlastName] = useState(false);
+    const [lastNameFocus, setlastNameFocus] = useState(false);
 
 	const [email, setemail] = useState('');
     const [validemail, setValidemail] = useState(false);
@@ -55,18 +55,23 @@ const Register = () => {
     useEffect(() => {
         userRef.current.focus();
     }, [])
+    
+const handleRoleChange = (event) => {
+  setRole(event.target.value); // update role state when user selects an option
+}
+
 /////// controlled state change handler
     useEffect(() => {
         setValidName(USER_REGEX.test(user));
     }, [user])
 
 	useEffect(() => {
-        setValidFirstName(NAME_REGEX.test(firstname));
-    }, [firstname])
+        setValidfirstName(NAME_REGEX.test(firstName));
+    }, [firstName])
 
 	useEffect(() => {
-        setValidlastname(NAME_REGEX.test(lastname));
-    }, [lastname])
+        setValidlastName(NAME_REGEX.test(lastName));
+    }, [lastName])
 
 	useEffect(() => {
         setValidemail(EML_REGEX.test(email));
@@ -81,7 +86,7 @@ const Register = () => {
 	///// set default msg when retyping after error msg on one of the field 
     useEffect(() => {
         setErrMsg('');
-    }, [user, email , firstname, lastname , pwd, matchPwd,role])
+    }, [user, email , firstName, lastName , pwd, matchPwd,role])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -90,8 +95,8 @@ const Register = () => {
         const v1 = USER_REGEX.test(user);
         const v2 = PWD_REGEX.test(pwd);
 		const v3 = EML_REGEX.test(email);
-        const v4 = NAME_REGEX.test(lastname);
-		const v5 = NAME_REGEX.test(firstname);
+        const v4 = NAME_REGEX.test(lastName);
+		const v5 = NAME_REGEX.test(firstName);
       
         
         if (!v1 || !v2 || !v3 || !v4 || !v5 ) {
@@ -99,14 +104,14 @@ const Register = () => {
 			!v1 && msg.concat("username ,") ;
 			!v2 && msg.concat("password ,") ;
 			!v3 && msg.concat("email ,") ;
-			!v4 && msg.concat("lastname ,") ;
+			!v4 && msg.concat("lastName ,") ;
 			!v5 && msg.concat("fisrtname ,") ;
             setErrMsg(msg+"Invalid Entry");
             return;
         }
         try {
-            const response = await axios.post("http://127.0.0.1:8000/users/register/",
-                JSON.stringify({ username : user, email : email  , first_name : firstname, last_name : lastname , password : pwd ,role:role}),
+            const response = await axios.post("http://127.0.0.1:8000/api/register",
+                JSON.stringify({ username : user, email : email  , firstName: firstName, lastName : lastName , password : pwd ,role:role}),
                 {
                     headers: { 'Content-Type': 'application/json' },
                    
@@ -120,8 +125,8 @@ const Register = () => {
             setUser('');
             setPwd('');
             setMatchPwd('');
-			setfirstname('');
-			setlastname('');
+			setfirstName('');
+			setlastName('');
 			setemail('');
         } catch (err) {
             if (!err?.response) {
@@ -133,18 +138,19 @@ const Register = () => {
             }
             errRef.current.focus();
         }
+         
     }
 
     return (
       <>
-        {success ? (
-          <section>
-            <h1>Success!</h1>
-            <p>
-              <a href="#">Sign In</a>
-            </p>
-          </section>
-        ) : (
+          {success ? (
+        <section>
+          <h1 color="white">Success!</h1>
+          <p className="sign"> 
+            Click <Link to="/login">here</Link> to go to the login page.
+          </p>
+        </section>
+      ) : (
           <section>
             <p
               ref={errRef}
@@ -182,24 +188,24 @@ const Register = () => {
                 Letters, numbers, underscores, hyphens allowed.
               </p>
 
-              <label htmlFor="firstname">firstname:</label>
+              <label htmlFor="firstName">firstName:</label>
               <input
                 type="text"
-                id="firstname"
+                id="firstName"
                 ref={userRef}
                 autoComplete="off"
-                onChange={(e) => setfirstname(e.target.value)}
-                value={firstname}
+                onChange={(e) => setfirstName(e.target.value)}
+                value={firstName}
                 required
-                aria-invalid={validFirstName ? "false" : "true"}
+                aria-invalid={validfirstName ? "false" : "true"}
                 aria-describedby="uidnote"
-                onFocus={() => setfirstnameFocus(true)}
-                onBlur={() => setfirstnameFocus(false)}
+                onFocus={() => setfirstNameFocus(true)}
+                onBlur={() => setfirstNameFocus(false)}
               />
               <p
                 id="fname"
                 className={
-                  firstnameFocus && firstname && !validFirstName
+                  firstNameFocus && firstName && !validfirstName
                     ? "instructions"
                     : "offscreen"
                 }
@@ -211,23 +217,23 @@ const Register = () => {
                 Letters, allowed . numbers, underscores, hyphens not allowed.
               </p>
 
-              <label htmlFor="lastname">lastname:</label>
+              <label htmlFor="lastName">lastName:</label>
               <input
                 type="text"
-                id="lastname"
+                id="lastName"
                 autoComplete="off"
-                onChange={(e) => setlastname(e.target.value)}
-                value={lastname}
+                onChange={(e) => setlastName(e.target.value)}
+                value={lastName}
                 required
-                aria-invalid={validlastname ? "false" : "true"}
+                aria-invalid={validlastName ? "false" : "true"}
                 aria-describedby="uidnote"
-                onFocus={() => setlastnameFocus(true)}
-                onBlur={() => setlastnameFocus(false)}
+                onFocus={() => setlastNameFocus(true)}
+                onBlur={() => setlastNameFocus(false)}
               />
               <p
                 id="lname"
                 className={
-                  lastnameFocus && lastname && !validlastname
+                  lastNameFocus && lastName && !validlastName
                     ? "instructions"
                     : "offscreen"
                 }
@@ -317,14 +323,14 @@ const Register = () => {
                 Must match the first password input field.
               </p>
               <label htmlFor="role">Role:</label>
-<select id="role" name="role" required
+<select id="role" name="role" required value={role} onChange={handleRoleChange}
         aria-invalid={validMatch ? "false" : "true"}
         aria-describedby="confirmnote"
         onFocus={() => setMatchFocus(true)}
         onBlur={() => setMatchFocus(false)}>
   <option value="">-- Sélectionner un rôle --</option>
-  <option value="apprenant">Apprenant</option>
-  <option value="formateur">Formateur</option>
+  <option value="student">student</option>
+  <option value="teacher">teacher</option>
 </select>
 
 
@@ -333,9 +339,9 @@ const Register = () => {
                   !validName ||
                   !validPwd ||
                   !validMatch ||
-                  !validFirstName ||
+                  !validfirstName ||
                   !validemail ||
-                  !validlastname
+                  !validlastName
                     ? true
                     : false
                 }

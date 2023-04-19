@@ -78,10 +78,10 @@ class CourseController extends AbstractController
         $content = $request->request->all();
         // get the category object by category id
         $category = $categoryRepository->find($categoryId);
-        $title = $content["title"];
+        $title = $content["title"]; //error
         $description = $content["description"];
         /* @var UploadedFile $videoFile */
-        $videoFile = $request->files->get('myvideo');
+        $videoFile = $request->files->get('video');
 
 
         $uploadedVideo = $this->videoUpload($videoFile);
@@ -183,7 +183,7 @@ class CourseController extends AbstractController
         // Get the request content as an array
         $content = $request->request->all();
         /* @var UploadedFile $videoFile */
-        $videoFile = $request->files->get('myvideo');
+        $videoFile = $request->files->get('video');
         if($videoFile)
         {
             $uploadedVideo = $this->videoUpload($videoFile);

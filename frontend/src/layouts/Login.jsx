@@ -3,10 +3,14 @@ import {  useLayoutEffect , useRef, useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 import { Link, useNavigate, useLocation ,useOutletContext} from 'react-router-dom';
 import jwt_decode from "jwt-decode";
+import useRefreshToken from "./../hooks/useRefreshToken"
 
 import axios from '../api/axios';
 const LOGIN_URL = 'users/login/';
 const Login =() => {
+
+    const refresh = useRefreshToken();
+    
     const { setAuth } = useAuth();
 	const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
     const showNav = ()=> setAnimationIsFinished(true) ;
@@ -33,23 +37,37 @@ const Login =() => {
     useEffect(() => {
         setErrMsg('');
     }, [user, pwd])
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("submit");
-            const response = await axios.post("http://127.0.0.1:8000/api/login",
+            await axios.post("http://127.0.0.1:8000/api/login",
                 JSON.stringify({'username':user, 'password':pwd}),
                 {
                     headers: { 'Content-Type': 'application/json' }
                 }
             ).then((response)=> {
                 console.log(response);
-                console.log(response.data.access);
+                console.log(response.data.token);
+                console.log(response.data.RefreshToken);
+                console.log(response.data.roles);
                 console.log(JSON.stringify(response?.data));
+                console.log(response.roles);
                 //console.log(JSON.stringify(response));
-                const accessToken = jwt_decode(response.data.access);
+                const accessToken = jwt_decode(response.data.token);
+                localStorage.setItem('token',response.data.token);
+                localStorage.setItem('roles', accessToken.roles);  
+
+                localStorage.setItem('pwd',pwd);
+
+                localStorage.setItem('user', user);
+                localStorage.setItem('is_staff', accessToken.is_staff);
+          
+
+
                 const is_staff = accessToken.is_staff;
-                 console.log("response :"+accessToken.is_staff)
-                 console.log("is_staff :"+is_staff)
+                 console.log("response :",accessToken.roles)
+                 console.log("is_staff :",is_staff)
                 setAuth({ user, pwd, is_staff, accessToken });
                 setUser('');
                 setPwd('');
@@ -57,6 +75,7 @@ const Login =() => {
 
 
             }).catch((err)=>{
+                console.log("err", err);
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response?.status === 400) {
@@ -68,6 +87,7 @@ const Login =() => {
             }
             errRef.current.focus();
         });
+        
     }
 
     return (

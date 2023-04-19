@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { gsap } from "gsap";
+import { Link } from "react-router-dom";
+
 // import "./App.css" ;
 import MainLayout from "./layouts/Main";
 import Courses from "./layouts/courses";
@@ -19,12 +21,17 @@ import Addcourse from "./layouts/Trainer/Coursesf/addcourse";
 import ForgotPassword from "./components/Resetpassword";
 import About from "./layouts/About/About";
 import CoursVid from "./layouts/coursVid";
-
+import useAuth from "./hooks/useAuth";
+import axios from "./api/axios";
+import UserProfil from "./layouts/Userprofil/Index";
 // import Formateurhome from "./layouts/Trainer/formateurhome";
 // import AddCourseForm from "./layouts/Trainer/addcourse";
 export default function App() {
+  const { setAuth } = useAuth();
+  useEffect(()=>{
+    setAuth({ user:localStorage.getItem('user'), pwd:localStorage.getItem('pwd') , is_staff: localStorage.getItem('is_staff'), accessToken:localStorage.getItem('accessToken') });
 
-  
+  },[])
   return <>
 
     <Routes>
@@ -39,7 +46,7 @@ export default function App() {
         <Route path="register" element={<Register />} />
         <Route path="unauthorized" element={<Unauthorized />} />
         <Route index element={<Home />} />
-        <Route element={<RequireAuth allowedRoles={['User', 'Admin']} />}>
+        <Route element={<RequireAuth allowedRoles={[ 'User']} />}>
           <Route path="courses" element={<Courses />} />
         </Route>
         <Route element={<RequireAuth allowedRoles={['User']} />}>
@@ -51,7 +58,8 @@ export default function App() {
         </Route>
         <Route element={<RequireAuth allowedRoles={['User']} />}>
           <Route path="profil" element={<Profil />} />
-          <Route path="Addcourse" element={<Addcourse/>} />
+          <Route path="userprofil" element={<UserProfil />} />
+          <Route path="Addcourse/:categoryId" element={<Addcourse />} />
         </Route>
         <Route path="Addcourse" element={<Addcourse/>} />
         <Route path="update" element={<UpdateProfile/>} />
