@@ -40,6 +40,7 @@ class CategoryController extends AbstractController
 
 
     #[Route('/category', name: 'create', methods: ['POST'])]
+    #[OA\Post(description: 'Creates a new category')]
     #[OA\RequestBody(
         description: 'Creates new category',
         content: new OA\JsonContent(

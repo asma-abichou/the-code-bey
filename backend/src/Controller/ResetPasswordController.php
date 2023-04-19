@@ -3,14 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\ChangePasswordFormType;
-use App\Form\ResetPasswordRequestFormType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -20,16 +18,17 @@ use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
+use OpenApi\Attributes as OA;
 
-#[Route('/reset-password')]
+#[Route('/api/reset-password')]
 class ResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
 
     public function __construct(
-        private ResetPasswordHelperInterface $resetPasswordHelper,
-        private EntityManagerInterface $entityManager,
-        private UserRepository $userRepository
+        private readonly ResetPasswordHelperInterface $resetPasswordHelper,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserRepository $userRepository
     ) {
     }
 
@@ -37,22 +36,27 @@ class ResetPasswordController extends AbstractController
      * Display & process form to request a password reset.
      */
     #[Route('', name: 'app_forgot_password_request', methods: ['POST'])]
+    #[OA\Tag(name: 'Reset Password')]
     public function request(Request $request, MailerInterface $mailer): Response
     {
         $content = json_decode($request->getContent(), true);
         $email = $content["email"];
+        //send the password reset email
         return $this->processSendingPasswordResetEmail($email, $mailer);
     }
 
     /**
      * Confirmation page after a user has requested a password reset.
      */
-    #[Route('/check-email', name: 'app_check_email')]
+   #[Route('/check-email', name: 'app_check_email' , methods: ['GET'])]
+
     public function checkEmail(): Response
     {
         // Generate a fake token if the user does not exist or someone hit this page directly.
         // This prevents exposing whether or not a user was found with the given email address or not
+        //get the password reset token from the session
         if (null === ($resetToken = $this->getTokenObjectFromSession())) {
+
             $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
         }
 
@@ -65,8 +69,10 @@ class ResetPasswordController extends AbstractController
      * Validates and process the reset URL that the user clicked in their email.
      */
     #[Route('/reset/{token}', name: 'app_reset_password')]
+
     public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, string $token = null): Response
     {
+        //If a token is provided as a parameter, it is stored in the session
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
             // loaded in a browser and potentially leaking the token to 3rd party JavaScript.
@@ -74,7 +80,7 @@ class ResetPasswordController extends AbstractController
 
            /* return $this->redirectToRoute('app_reset_password');*/
         }
-
+       //If no token is found, the function redirects to Facebook.
         $token = $this->getTokenFromSession();
         if (null === $token) {
             return $this->redirect("https://www.facebook.com");
@@ -82,6 +88,7 @@ class ResetPasswordController extends AbstractController
         }
 
         try {
+            //If a token is found, it is validated and the corresponding user is fetched
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         } catch (ResetPasswordExceptionInterface $e) {
             return $this->redirect("https://www.facebook.com");
@@ -91,6 +98,7 @@ class ResetPasswordController extends AbstractController
     }
 
     #[Route('/change-password', name: 'app_change_password')]
+
     public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
         $content =  json_decode($request->getContent(), true);
