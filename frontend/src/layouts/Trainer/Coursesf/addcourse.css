@@ -94,3 +94,9 @@
   border-radius: 15px!important;
   border: 3px solid #ccc !important;
 }
+.form2-title{
+  background: linear-gradient(55deg, rgb(197, 4, 209), rgb(184, 11, 45));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+}

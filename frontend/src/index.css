@@ -217,3 +217,15 @@ position: absolute;
   
   margin-top: 15px;
 }
+.success-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #7dbb61;
+  color: #fff;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  border-radius: 5px;
+}
+

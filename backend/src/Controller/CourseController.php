@@ -12,6 +12,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,7 +52,7 @@ class CourseController extends AbstractController
                 new OA\Property(property: 'title', type:'string'),
                 new OA\Property(property: 'description', type:'string'),
                 new OA\Property(property: 'duration', type:'string'),
-                new OA\Property(property: "video", type: "file", format:"binary")
+                new OA\Property(property: "myVideo", type: 'file', format:"binary")
             ],
             example: ['title' => 'Fullstack development',
                       'description' => 'this is a fullstack development course',
@@ -61,10 +62,14 @@ class CourseController extends AbstractController
     )]
 
     #[OA\Response(
-        response : 201,
-        description: 'Returns the created course',
-        content: new Model(type: Course::class, groups: ['main'])
+    response: 201,
+    description: 'Returns the created course',
+    content: new OA\JsonContent(
+    type: 'array',
+    items: new OA\Items(ref: new Model(type: Course::class, groups: ['main']))
+    )
     )]
+
     #[OA\Tag(name:'Course')]
     public function addCourse(Request $request, $categoryId, CategoryRepository $categoryRepository): Response
     {
@@ -81,7 +86,8 @@ class CourseController extends AbstractController
         $title = $content["title"]; //error
         $description = $content["description"];
         /* @var UploadedFile $videoFile */
-        $videoFile = $request->files->get('video');
+
+        $videoFile = $request->files->get('myVideo');
 
 
         $uploadedVideo = $this->videoUpload($videoFile);
@@ -153,7 +159,7 @@ class CourseController extends AbstractController
         description: 'Update a course by Id',
         content: [new OA\MediaType(mediaType: "multipart/form-data" , schema: new OA\Schema(
             properties: [
-                new OA\Property(property: "video", type: "file", format:"binary"),
+                new OA\Property(property: "myVideo", type: "file", format:"binary"),
                 new OA\Property(property: 'title', type:'string'),
                 new OA\Property(property: 'description', type:'string'),
                 new OA\Property(property: 'duration', type:'string')
@@ -183,7 +189,9 @@ class CourseController extends AbstractController
         // Get the request content as an array
         $content = $request->request->all();
         /* @var UploadedFile $videoFile */
-        $videoFile = $request->files->get('video');
+
+        $videoFile = $request->files->get('myVideo');
+
         if($videoFile)
         {
             $uploadedVideo = $this->videoUpload($videoFile);
@@ -242,7 +250,7 @@ class CourseController extends AbstractController
     private function videoUpload($videoFile): array|JsonResponse
     {
         //1- Verify file extension , it must be .mp4
-        if ($videoFile->getClientOriginalExtension() !== 'mp4') {
+        if ($videoFile && $videoFile->getClientOriginalExtension() !== 'mp4') {
             return $this->json(["message" => "Invalid file format. Please upload a .mp4 file."], 400);
         }
         // generate random file name
@@ -254,6 +262,7 @@ class CourseController extends AbstractController
         $fullPath = $this->getParameter('kernel.project_dir') . $videoPath;
         // Upload video
         $videoFile->move($fullPath, $videoFileName);
+
         // Get video duration
         $getID3 = new GetID3();
         $videoFileInfos = $getID3->analyze($fullPath . $videoFileName);

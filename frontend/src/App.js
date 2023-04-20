@@ -24,13 +24,15 @@ import CoursVid from "./layouts/coursVid";
 import useAuth from "./hooks/useAuth";
 import axios from "./api/axios";
 import UserProfil from "./layouts/Userprofil/Index";
+import Addcategory from "./layouts/Trainer/Coursesf/addCategory";
 // import Formateurhome from "./layouts/Trainer/formateurhome";
 // import AddCourseForm from "./layouts/Trainer/addcourse";
 export default function App() {
   const { setAuth } = useAuth();
+
   useEffect(()=>{
     setAuth({ user:localStorage.getItem('user'), pwd:localStorage.getItem('pwd') , is_staff: localStorage.getItem('is_staff'), accessToken:localStorage.getItem('accessToken') });
-
+console.log(setAuth);
   },[])
   return <>
 
@@ -59,9 +61,10 @@ export default function App() {
         <Route element={<RequireAuth allowedRoles={['User']} />}>
           <Route path="profil" element={<Profil />} />
           <Route path="userprofil" element={<UserProfil />} />
-          <Route path="Addcourse/:categoryId" element={<Addcourse />} />
+          <Route path="Addcourse" element={<Addcourse />} />
+          <Route path="Addcategory" element={<Addcategory/>} />
         </Route>
-        <Route path="Addcourse" element={<Addcourse/>} />
+        
         <Route path="update" element={<UpdateProfile/>} />
       </Route>
     

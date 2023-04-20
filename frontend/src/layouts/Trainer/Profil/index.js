@@ -54,14 +54,21 @@ const Profil = () => {
         <List>
   {[
     { text: 'Addcourse', link: '/Addcourse' },
+    { text: 'Addcategory', link: '/Addcategory' },
 
     { text: 'chat', link: '/chat' },
     { text: 'LiveStream', link: '/livestream' }
   ].map((item, index) => (
     <ListItem key={item.text} disablePadding>
       <ListItemButton component={Link} to={item.link}>
-        <ListItemIcon>
-          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+        <ListItemIcon>  {item.text === 'Addcategory' ? (
+                  <InboxIcon />
+                ) : item.text === 'Addcourse' ? (
+                  <InboxIcon />
+                ) : (
+                  <MailIcon />
+                )}
+
         </ListItemIcon>
         <ListItemText primary={item.text} />
       </ListItemButton>
