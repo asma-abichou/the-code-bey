@@ -36,6 +36,24 @@ class ResetPasswordController extends AbstractController
      * Display & process form to request a password reset.
      */
     #[Route('', name: 'app_forgot_password_request', methods: ['POST'])]
+    #[OA\Post(description: 'Identify user')]
+    #[OA\RequestBody(
+        description: 'Identify who the password reset is for',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'email', type:'string'),
+            ],
+            example: [
+                'email' => 'asmaa123@gmail.com'
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'send the link to the email ',
+        content: new Model(type: User::class, groups: ['main'])
+    )]
+
     #[OA\Tag(name: 'Reset Password')]
     public function request(Request $request, MailerInterface $mailer): Response
     {
@@ -49,7 +67,12 @@ class ResetPasswordController extends AbstractController
      * Confirmation page after a user has requested a password reset.
      */
    #[Route('/check-email', name: 'app_check_email' , methods: ['GET'])]
-
+   #[OA\Response(
+       response: 200,
+       description: 'checking the user  email after they submit the forgot password form',
+       content: new Model(type: User::class)
+   )]
+   #[OA\Tag(name: 'Reset Password')]
     public function checkEmail(): Response
     {
         // Generate a fake token if the user does not exist or someone hit this page directly.
@@ -68,8 +91,14 @@ class ResetPasswordController extends AbstractController
     /**
      * Validates and process the reset URL that the user clicked in their email.
      */
-    #[Route('/reset/{token}', name: 'app_reset_password')]
+    #[Route('/reset/{token}', name: 'app_reset_password' , methods: ['GET'] )]
 
+    #[OA\Response(
+        response: 200,
+        description: 'checking the user  email after they submit the forgot password form',
+        content: new Model(type: User::class)
+    )]
+    #[OA\Tag(name: 'Reset Password')]
     public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, string $token = null): Response
     {
         //If a token is provided as a parameter, it is stored in the session
@@ -97,7 +126,23 @@ class ResetPasswordController extends AbstractController
         return $this->redirect("https://www.google.com");
     }
 
-    #[Route('/change-password', name: 'app_change_password')]
+
+
+    #[Route('/change-password', name: 'app_change_password' , methods: ['POST'])]
+    #[OA\RequestBody(
+        description: 'The new password',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'plainPassword', type:'string'),
+            ],
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Checks if an email address is associated with an account that can be used to reset a password',
+        content: new Model(type: User::class)
+    )]
+    #[OA\Tag(name: 'Reset Password')]
 
     public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): JsonResponse
     {
