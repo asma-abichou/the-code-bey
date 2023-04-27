@@ -61,7 +61,7 @@ const handleCategoryChange=(event)=>{
     formData.append('myVideo', file);
     setIsSubmitted(true); 
 
-   axios.post(`http://127.0.0.1:8000/api/course/1`, formData,
+   axios.post(`http://127.0.0.1:8000/api/course/${categoryId}`, formData,
    {headers: {
     'Content-Type': 'multipart/form-data'
   }})

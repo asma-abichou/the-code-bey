@@ -16,7 +16,7 @@ import RequireAuth from './components/RequireAuth';
 import { Application } from 'react-rainbow-components';
 import { Route, Routes } from "react-router-dom";
 import Body from "./layouts/Body";
-import UpdateProfile from "./layouts/Userprofil/UpdateProfil";
+import UpdateProfil from "./layouts/Userprofil/UpdateProfile";
 import Addcourse from "./layouts/Trainer/Coursesf/addcourse";
 import ForgotPassword from "./components/Resetpassword";
 import About from "./layouts/About/About";
@@ -25,6 +25,8 @@ import useAuth from "./hooks/useAuth";
 import axios from "./api/axios";
 import UserProfil from "./layouts/Userprofil/Index";
 import Addcategory from "./layouts/Trainer/Coursesf/addCategory";
+
+
 // import Formateurhome from "./layouts/Trainer/formateurhome";
 // import AddCourseForm from "./layouts/Trainer/addcourse";
 export default function App() {
@@ -64,8 +66,8 @@ console.log(setAuth);
           <Route path="Addcourse" element={<Addcourse />} />
           <Route path="Addcategory" element={<Addcategory/>} />
         </Route>
+      
         
-        <Route path="update" element={<UpdateProfile/>} />
       </Route>
     
 

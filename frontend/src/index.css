@@ -191,41 +191,77 @@ margin-right: 54px;
   border-radius: 50%;
   object-fit: cover;
 }
-.css-2s90m6-MuiAvatar-root {
-  right: -700px;
-  height: 44px !important;
-  width: 46px !important;
- 
-}
-.h {
-  display: inline-block;
-  outline: none;
-  vertical-align: middle;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  height: 40px;
-  width: 40px;
-  color: #eee8e8;
-  cursor: pointer;
-  text-decoration: none;
-position: absolute;
-}
 
-.MuiAvatar-root.MuiAvatar-circular.MuiAvatar-colorDefault.css-2s90m6-MuiAvatar-root {
-  
-  margin-top: 15px;
-}
+
 .success-message {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #7dbb61;
+  background-color: #bb61a0;
   color: #fff;
   padding: 1rem;
   margin-top: 1rem;
   font-size: 1.2rem;
   border-radius: 5px;
 }
+.pimg {
+  position: absolute;
+  top: 6px;
+  right: 2px;
+  overflow: hidden;
+  object-fit: cover;
+  width: 4rem;
+  height: 4rem;
+  border: 4px solid #38056c;
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  background: linear-gradient(270deg, #3fa1a9, #38056c);
+}
 
+.pimg svg{
+  fill: currentColor;
+}
+.pimg:hover svg {
+  fill:  #081730; /* replace with your desired color */
+}
+
+.profile-conatiner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-button {
+  background-color: #F9A826;
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+.save-button {
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.editable-input {
+  border: none;
+  border-bottom: 1px solid #C4C4C4;
+  font-size: 16px;
+  padding: 4px 0;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.editable-input:focus {
+  outline: none;
+  border-bottom: 2px solid #F9A826;
+}

@@ -1,85 +1,154 @@
-import React, { useLayoutEffect } from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import React, { useState } from 'react';
+import './edit.css';
 import { useOutletContext } from 'react-router-dom';
-import '../Trainer/Profil/styles.css';
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import { Avatar, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-
-import { Link } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
+import { useLayoutEffect } from 'react';
+import useAuth from "../../hooks/useAuth";
 
 const UserProfil = () => {
-    const { auth } = useAuth();
-
-    const username = auth.user
+  const { auth } = useAuth();
+  const username = auth.user;
+    console.log(username);
   
-    const drawerWidth = 240;
+
     const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
-    const showNav = () => setAnimationIsFinished(true);
-
-    useLayoutEffect(() => {
-        showNav();
-    }, [])
-
-    const [value, setValue] = React.useState('1');
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
+    const showNav = ()=> setAnimationIsFinished(true) ;
+     
+    useLayoutEffect(()=>{
+      showNav();
+    },[])
+    const [state, setState] = useState({
+      file: "",
+      imagePreviewUrl:
+        "https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true",
+      name: "",
+      status: "",
+      active: "edit"
+    });
+    const Edit = ({ onSubmit, children }) => (
+        <div className="card">
+          <form onSubmit={onSubmit}>
+            {children}
+            <button type="submit" className="save button2 ">
+              Save{" "}
+            </button>
+          </form>
+        </div>
+      );
+      const ImgUpload = ({ onChange, src }) => (
+        <label htmlFor="photo-upload" className="custom-file-upload fas">
+          <div className="img-wrap img-upload">
+            <img for="photo-upload" src={src} />
+          </div>
+          <input id="photo-upload" type="file" onChange={onChange} />
+        </label>
+      );
+      const Name = () => (
+        <div className="field">
+          <label htmlFor="name">name:</label>
+          <input
+            id="name"
+            type="text"
+            maxlength="25"
+            placeholder="Alexa"
+            required
+          />
+        </div>
+      );
+      const Status = () => (
+        <div className="field">
+          <label htmlFor="status">status:</label>
+          <input
+            id="status"
+            type="text"
+            maxLength="35"
+            placeholder="It's a nice day!"
+            required
+          />
+        </div>
+      );
+      const Profile = ({ onSubmit, src, username, status }) => (
+        <div className="card">
+          <form onSubmit={onSubmit}>
+            <h1>Profile Card</h1>
+            <label className="custom-file-upload fas">
+              <div className="img-wrap">
+                <img for="photo-upload" src={src} />
+              </div>
+            </label>
+            <div className="name">{username}</div>
+            <div className="status">{status}</div>
+            <button type="submit" className="edit button2">
+              Edit Profile{" "}
+            </button>
+          </form>
+        </div>
+      );
+  
+    const photoUpload = (e) => {
+      e.preventDefault();
+      const reader = new FileReader();
+      const file = e.target.files[0];
+      reader.onloadend = () => {
+        setState({
+          ...state,
+          file: file,
+          imagePreviewUrl: reader.result
+        });
+      };
+      reader.readAsDataURL(file);
     };
+  
+    const editName = (e) => {
+      const name = e.target.value;
+      setState({
+        ...state,
+        name
+      });
+    };
+  
+    const editStatus = (e) => {
+      const status = e.target.value;
+      setState({
+        ...state,
+        status
+      });
+    };
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      let activeP = state.active === "edit" ? "profile" : "edit";
+      setState({
+        ...state,
+        active: activeP
+      });
+    };
+  
+    const { imagePreviewUrl, name, status, active } = state;
+  
     return (
-        <div className='profile-conatiner'>
-
-    <Card sx={{ maxWidth: 1900 }}>
-    <CardMedia
-        component="img"
-        alt="green iguana"
-        height="140"
-        
-    />
-    <Avatar
-        className="avatar"
-        alt="Remy Sharp"
-        src="../../../static/images/"
-        sx={{ width: 150, height: 150 }}
-    />
-    <CardContent>
-        <Typography gutterBottom variant="h5" component="div" className='trainer-name'>
-           {username}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-        {username} is a good teacher
-        </Typography>
-    </CardContent>
-    <CardActions>
-        <Box sx={{ width: '200%', typography: 'body1' }}>
-            <TabContext value={value}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example">
-                        <Tab label="Informations" value="1" />
-                        <Tab label="Courses" value="2" />
-                    </TabList>
-                </Box>
-                <TabPanel value="1">Informations</TabPanel>
-                <TabPanel value="2">Courses</TabPanel>
-            </TabContext>
-        </Box>
-    </CardActions>
-</Card>
-
-
-</div>
-);
-}
-
-export default UserProfil
+      <div className='body'>
+        {active === "profile" ? (
+          <Edit onSubmit={handleSubmit}>
+            <ImgUpload onChange={photoUpload} src={imagePreviewUrl} />
+            <Name onChange={editName} value={name} />
+            <Status onChange={editStatus} value={status} />
+            
+          </Edit>
+        ) : (
+          <Profile
+            onSubmit={handleSubmit}
+            src={imagePreviewUrl}
+            name={username}
+            status={status}
+            
+          >
+           
+            </Profile>
+        )}
+      </div>
+    );
+    
+  };
+  
+  export default UserProfil;
+  

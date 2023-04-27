@@ -17,6 +17,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import img from '../../../static/images/yassouna.jpg'
 import { Link } from 'react-router-dom';
+import useAuth from '../../../hooks/useAuth';
 
 
 const Profil = () => {
@@ -24,7 +25,9 @@ const Profil = () => {
     const drawerWidth = 240;
     const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
     const showNav = () => setAnimationIsFinished(true);
-
+    
+    const { auth } = useAuth();
+    const username = auth.user;
     useLayoutEffect(() => {
         showNav();
     }, [])
@@ -104,7 +107,7 @@ const Profil = () => {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div" className='trainer-name'>
-                       Red3i
+                      {username}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                         Lizards are a widespread group of squamate reptiles, with over 6,000
