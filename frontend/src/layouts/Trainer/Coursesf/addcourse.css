@@ -1,102 +1,109 @@
 .form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 103vh;
-    --border-size: 3px;
-    background-image: url(C:\Users\Yessine-PC\Desktop\New folder\the-code-bey\frontend\src\static\images\pp3.png);
-  }
-  
- .form-container  form {
-    display: flex;
-    flex-direction: column;
-    width: 407px;
-    padding: 136px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 12px;
-    margin-left: 124px;
-    margin-right: 125px;
-  }
-  
-  .form-container .form-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .form-container label {
-    margin-right: 10px;
-    width: 120px;
-    text-align: right;
-  }
-  
-  .form-container input[type="text"],
-  
-  textarea,
-  input[type="file"] {
-    flex: 1;
-    margin-left: 10px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  .form-container select
-  {
-    flex: 1;
-    margin-left: 10px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .form-container textarea {
-    height: 100px;
-  }
-  
-  .form-container button[type="submit"] {
-    margin-left: 130px;
-    padding: 10px 20px;
-    background-color: #031930;
-    color: #fff;
-    border: none;
-    border-radius:104px;
-    cursor: pointer;
-  }
-  .form-title {
-    text-align: center;
-    margin-bottom: 41px;
-    color: #ccc;
-    margin-top: -3px;
-     
-}
-.form-title h1 {
-    background: linear-gradient(55deg, rgb(197, 4, 209), rgb(184, 11, 45));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .form-container button[type="submit"]:hover {
-    background: linear-gradient(55deg, rgb(197, 4, 209), rgb(184, 11, 45));
-  }
-  .form-container {
-    position: relative;
-  }
-  
-  .go-back-link {
-    position: absolute;
-    bottom: 53px;
-    left: 148px;
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .form2 {
-  border-radius: 15px!important;
-  border: 3px solid #ccc !important;
+  display: flex;
+  flex-direction: column;
 }
-.form2-title{
-  background: linear-gradient(55deg, rgb(197, 4, 209), rgb(184, 11, 45));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 
+.form-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  resize: none;
+}
+
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+button[type="submit"] {
+
+  color: #622121;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+.success-message {
+  text-align: center;
+
+  color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.go-back-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 16px;
+
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+
+.form-container {
+  background-color: #1c1c1c; /* dark gray */
+  color: #f5f5f5; /* light gray */
+}
+
+.form-container input,
+.form-container select,
+.form-container textarea {
+  background-color: #2b2b2b; /* slightly darker gray */
+  color: #f5f5f5; /* light gray */
+  border: 1px solid #555; /* medium gray */
+}
+
+.form-container button[type="submit"] {
+  background-color: #0072c6; /* dark blue */
+  color: #f5f5f5; /* light gray */
+}
+
+.form-container button[type="submit"]:hover {
+  background-color: #005ea2; /* slightly darker blue */
+}
+
+.form-container a.go-back-link {
+  color: #0072c6; /* dark blue */
+}
+
+.form-container a.go-back-link:hover {
+  color: #005ea2; /* slightly darker blue */
+}
+
+.form-container label {
+  color: #bfbfbf; /* light gray */
 }

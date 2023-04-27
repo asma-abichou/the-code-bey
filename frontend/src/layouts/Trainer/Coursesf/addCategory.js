@@ -2,7 +2,7 @@ import axios from "../../../api/axios";
 import React, { useState } from "react";
 import  { useLayoutEffect } from 'react'
 import { useOutletContext } from 'react-router-dom';
-import './addcourse.css'
+import './addcategori.css'
 
 const Addcategory = () => {
     const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
@@ -34,7 +34,7 @@ const Addcategory = () => {
     }
 
     return (
-        <section>
+       <div className="form2">
             <div className="form2-title">
                 <h1>Add category</h1>
             </div>
@@ -49,7 +49,7 @@ const Addcategory = () => {
                 />
                 <button type="submit">Ajouter</button>
             </form>
-        </section>
+            </div>
     )
 }
 

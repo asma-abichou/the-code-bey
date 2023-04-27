@@ -1,12 +1,12 @@
-import "../styles/layouts/cources.css";
+import "./cources.css";
 import React, { useLayoutEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import png from "../python.svg";
+import png from "../../python.svg";
 import { Link, useOutletContext } from "react-router-dom";
-import axios from "../api/axios";
+import axios from "../../api/axios";
 axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
   "token"
 )}`;
