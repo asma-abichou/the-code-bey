@@ -74,7 +74,7 @@ class TeacherController extends AbstractController
             $allCourses["courses"][] = $courseArr;
         }
 
-        $userArray["teacher"] = ["firstName" => $teacher->getFirstName(), "lastName" => $teacher->getLastName(), "email" => $teacher->getEmail(), "dateOfBirth" => $teacher->getDateOfBirth()];
+        $userArray["teacher"] = ["firstName" => $teacher->getFirstName(), "lastName" => $teacher->getLastName(), "email" => $teacher->getEmail()];
         $response = array_merge($userArray, $allCourses);
         return $this->json($response, 200);
 
@@ -89,7 +89,7 @@ class TeacherController extends AbstractController
             properties: [
                 new OA\Property(property: 'firstName', type:'string'),
                 new OA\Property(property: 'lastName', type:'string'),
-                new OA\Property(property: "picture", type: "file", format:"binary")
+                new OA\Property(property: "profilePicture", type: "file", format:"binary")
             ],
             example: ['firstName' => 'Asma',
                       'lastName' => 'Abichou',

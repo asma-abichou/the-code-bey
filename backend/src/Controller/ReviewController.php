@@ -22,6 +22,7 @@ class ReviewController extends AbstractController
 
 
     #[Route('{courseId}/reviews', name: 'create_review' ,  methods: ['POST'])]
+
     public function createReview(Request $request, int $courseId)
     {
         if(!$this->isGranted("ROLE_STUDENT"))

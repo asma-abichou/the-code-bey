@@ -23,8 +23,8 @@ class StudentController extends AbstractController
 
 
     // Api to subscribe student to course
-    #[Route('/subscribe/{courseId}', name: 'subscribe_to_course', methods: ['GET'])]
-    #[OA\Get(description: 'Creates a new course subscribe')]
+    #[Route('/subscribe/{courseId}', name: 'subscribe_to_course', methods: ['POST'])]
+    #[OA\Get(description: ' create a subscription')]
 
     #[OA\Response(
         response : 200,
@@ -34,7 +34,12 @@ class StudentController extends AbstractController
     #[OA\Tag(name:'Student')]
     public function subscribeToCourse(Request $request, $courseId, CourseRepository $courseRepository): Response
     {
-
+        $currentUser  = $this->getUser();
+        // Check if the current user is a student
+        if(!$this->isGranted("ROLE_STUDENT"))
+        {
+            return $this->json(["message" => "You are not a student and you are not authorized to view subscribed courses!"], 403);
+        }
         $course = $courseRepository->find($courseId);
         if(!$course)
         {
