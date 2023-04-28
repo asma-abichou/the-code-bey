@@ -23,7 +23,7 @@ class StudentController extends AbstractController
 
 
     // Api to subscribe student to course
-    #[Route('/subscribe/{courseId}', name: 'subscribe_to_course', methods: ['POST'])]
+    #[Route('/subscribe/{courseId}', name: 'subscribe_to_course', methods: ['GET'])]
     #[OA\Get(description: ' create a subscription')]
 
     #[OA\Response(
