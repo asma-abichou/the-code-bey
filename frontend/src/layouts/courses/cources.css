@@ -1,0 +1,63 @@
+
+
+.body {
+    background-color: #060e1a;
+    background-image: url('C:\Users\Yessine-PC\Desktop\pfe isimm\isimm2023\00000\frontend\src\banner-2.jpg');
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+  }
+  
+  .courses-div {
+    width: 90%;
+    max-width: 800px;
+    margin-bottom: 40px;
+  }
+  
+  .courses-div h1 {
+    margin: 0 0 20px;
+    color: #fff;
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .area {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-gap: 30px;
+  }
+  
+  .box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .box:hover {
+    transform: translateY(-5px);
+  }
+  
+  .box p {
+    margin: 20px 0 0;
+    color: #444;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .box img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+  }
+  

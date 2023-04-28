@@ -11,7 +11,7 @@ const RequireAuth = ({ allowedRoles }) => {
      console.log(allowedRoles)
      
      const userRoles = auth.is_staff ? [
-        'User' , 'Admin', 'Formateur', 'Apprenanat'
+        'User' , 'Admin', 'student', 'teacher'
      ] : [
         'User'
     ];

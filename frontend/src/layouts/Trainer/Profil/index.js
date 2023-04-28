@@ -17,6 +17,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import img from '../../../static/images/yassouna.jpg'
 import { Link } from 'react-router-dom';
+import useAuth from '../../../hooks/useAuth';
 
 
 const Profil = () => {
@@ -24,7 +25,9 @@ const Profil = () => {
     const drawerWidth = 240;
     const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
     const showNav = () => setAnimationIsFinished(true);
-
+    
+    const { auth } = useAuth();
+    const username = auth.user;
     useLayoutEffect(() => {
         showNav();
     }, [])
@@ -54,14 +57,21 @@ const Profil = () => {
         <List>
   {[
     { text: 'Addcourse', link: '/Addcourse' },
+    { text: 'Addcategory', link: '/Addcategory' },
 
     { text: 'chat', link: '/chat' },
     { text: 'LiveStream', link: '/livestream' }
   ].map((item, index) => (
     <ListItem key={item.text} disablePadding>
       <ListItemButton component={Link} to={item.link}>
-        <ListItemIcon>
-          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+        <ListItemIcon>  {item.text === 'Addcategory' ? (
+                  <InboxIcon />
+                ) : item.text === 'Addcourse' ? (
+                  <InboxIcon />
+                ) : (
+                  <MailIcon />
+                )}
+
         </ListItemIcon>
         <ListItemText primary={item.text} />
       </ListItemButton>
@@ -97,7 +107,7 @@ const Profil = () => {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div" className='trainer-name'>
-                       Red3i
+                      {username}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                         Lizards are a widespread group of squamate reptiles, with over 6,000
