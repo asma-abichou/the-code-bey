@@ -5,6 +5,8 @@ import Certificat from '../../components/Certificat'
 import "./course.css"
 import { useOutletContext,useParams } from "react-router-dom";
 import Card from '../Card'
+import axios from '../../api/axios'
+import { useState } from 'react'
 
 
 
@@ -18,22 +20,38 @@ const courses=[
 ]
 
 export default function Course() {
+  const {idCateg}=useParams();
   const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
   const {courseName}=useParams()
   const showNav = ()=> setAnimationIsFinished(true) ;
-   
-  useLayoutEffect(()=>{
+  const [response, setResponse] = useState([]);
+  useLayoutEffect(() => {
     showNav();
-  },[])
+    chargeCourses();
+  }, []);
+  const chargeCourses = async () => {
+    await axios
+      .get(`http://127.0.0.1:8000/api/course/`, {//`http://127.0.0.1:8000/api/course/${idCateg}`
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((response) => {
+        setResponse(response.data);
+        console.log(response);
+        console.log(idCateg);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
   return (
     <div className='Courses-container'>
       {
-        courses.map((course,i)=>{
+        response.map((course,i)=>{
           return(
             <Card classname
+            key={i}
             title={course.title}
-            imageUrl={course.img}
-            body={course.body}
+            body={course.description}
             
             />
           )

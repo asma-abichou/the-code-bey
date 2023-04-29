@@ -11,6 +11,9 @@ const Card = (props) => {
       
         navigate(`${title}`);
       };
+      const subscribe=()=>{
+        console.log("subscribe")
+      }
     
   
   return (
@@ -31,7 +34,11 @@ const Card = (props) => {
 
       
         <div className='buttn'>
-           
+        <button onClick={subscribe}>
+                <a>
+                   Subscribe 
+                </a>
+            </button>
             <button onClick={navigatevid}>
                 <a>
                    view more 

@@ -58,9 +58,9 @@ export default function Courses() {
         <div className="area">
           {response.map((course, i) => {
             return (
-              <Link key={course.id} to={course.title}>
+              <Link key={i} to={""+course.id}>
                 <div className="box grid-item">
-                  <p> {course.title}</p>
+                  <p> {course.title} </p>
                 </div>
               </Link>
             );
