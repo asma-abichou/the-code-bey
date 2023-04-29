@@ -34,9 +34,9 @@ const Addcategory = () => {
     }
 
     return (
-       <div className="form2">
+       <div className="addCateg form2">
             <div className="form2-title">
-                <h1>Add category</h1>
+                <h1 className="Sign">Add category</h1>
             </div>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="title">Title :</label>

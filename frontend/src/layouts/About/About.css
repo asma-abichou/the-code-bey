@@ -5,7 +5,7 @@
     min-height: 100vh;
     background-color: #020101;
     color: #fff;
-    background-image: url(C:\Users\Yessine-PC\Desktop\pfe isimm\isimm2023\00000\frontend\src\about-us-hero-bg.jpg);
+    background-image: url(../../about-us-hero-bg.jpg);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;

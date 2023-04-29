@@ -75,7 +75,7 @@ const handleCategoryChange=(event)=>{
 
   return (
     <div>
-      <div className="form-container box">
+      <div className="addcourse form-container box">
         
         {isSubmitted ? ( // render success message if the form is successfully submitted
           <div className="success-message">

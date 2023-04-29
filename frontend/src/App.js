@@ -54,8 +54,9 @@ export default function App() {
           <Route path="courses" element={<Courses />} />
         </Route>
         <Route element={<RequireAuth allowedRoles={['User']} />}>
-          <Route path="courses/:courseName" element={<Course />} />
-          <Route path="courses/:courseName/:courseID" element={<CoursVid />} />
+          <Route path="courses/:idCateg" element={<Course />} />
+          <Route path="courses/All" element={<Course />} />
+          <Route path="courses/:idCateg/:courseID" element={<CoursVid />} />
         </Route>
         <Route element={<RequireAuth allowedRoles={['User']} />}>
           <Route path="admin" element={<Admin />} />

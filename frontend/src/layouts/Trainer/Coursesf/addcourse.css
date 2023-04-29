@@ -1,4 +1,4 @@
-.form-container {
+.addcourse {
   max-width: 500px;
   margin: auto;
   padding: 20px;
@@ -6,27 +6,28 @@
   border-radius: 5px;
 }
 
-.form2 {
+.addcourse .form2 {
   display: flex;
   flex-direction: column;
+  margin-top: 0px !important;
 }
 
-.form-title {
+.addcourse .form-title {
   text-align: center;
   margin-bottom: 20px;
 }
 
-.form-row {
+.addcourse .form-row {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
 
-label {
+.addcourse label {
   margin-bottom: 5px;
 }
 
-input[type="text"],
+.addcourse input[type="text"],
 textarea {
   padding: 10px;
   border: 1px solid #ccc;
@@ -35,16 +36,15 @@ textarea {
   resize: none;
 }
 
-select {
+.addcourse select {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
 }
 
-button[type="submit"] {
-
-  color: #622121;
+.addcourse button[type="submit"] {
+  color: #ede7e7;
   border: none;
   border-radius: 5px;
   padding: 10px;
@@ -54,7 +54,8 @@ button[type="submit"] {
 }
 
 
-.success-message {
+
+.addcourse .success-message {
   text-align: center;
 
   color: #fff;
@@ -63,7 +64,7 @@ button[type="submit"] {
   margin-bottom: 20px;
 }
 
-.go-back-link {
+.addcourse .go-back-link {
   display: block;
   text-align: center;
   margin-top: 20px;
@@ -74,36 +75,53 @@ button[type="submit"] {
 }
 
 
-.form-container {
+.addcourse {
   background-color: #1c1c1c; /* dark gray */
   color: #f5f5f5; /* light gray */
 }
 
-.form-container input,
-.form-container select,
-.form-container textarea {
+.addcourse input,
+.addcourse select,
+.addcourse textarea {
   background-color: #2b2b2b; /* slightly darker gray */
   color: #f5f5f5; /* light gray */
   border: 1px solid #555; /* medium gray */
 }
 
-.form-container button[type="submit"] {
+.addcourse button[type="submit"] {
   background-color: #0072c6; /* dark blue */
   color: #f5f5f5; /* light gray */
 }
 
-.form-container button[type="submit"]:hover {
+.addcourse button[type="submit"]:hover {
   background-color: #005ea2; /* slightly darker blue */
 }
 
-.form-container a.go-back-link {
+.addcourse a.go-back-link {
   color: #0072c6; /* dark blue */
 }
 
-.form-container a.go-back-link:hover {
+.addcourse .form-container a.go-back-link:hover {
   color: #005ea2; /* slightly darker blue */
 }
 
-.form-container label {
+.addcourse .form-container label {
   color: #bfbfbf; /* light gray */
+}
+
+.addcourse .form-row input[type="file"] {
+  border: none;
+  font-size: 1rem;
+  padding: 0.5rem;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 200px;
+}
+
+
+.addcourse .form-row input[type="file"]:hover {
+  cursor: pointer;
+  background-color: #ddd;
 }
