@@ -96,12 +96,12 @@ img.Img {
   border-radius: 50%;
 }
 
-label {
+.label {
   text-transform: uppercase;
   font-weight: 700;
 }
 
-input {
+.input {
   border-radius: 15px;
   border: 1px solid #b7b7b7;
   padding: 5px 5px 5px 10px;

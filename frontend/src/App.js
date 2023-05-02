@@ -10,7 +10,6 @@ import Home from "./layouts/home";
 import Profil from "./layouts/Trainer/Profil";
 import Login from "./layouts/authentification/Login";
 import Register from "./layouts/authentification/Register";
-import Admin from './components/Admin';
 import Unauthorized from './components/Unauthorized';
 import RequireAuth from './components/RequireAuth';
 import { Application } from 'react-rainbow-components';
@@ -25,7 +24,8 @@ import useAuth from "./hooks/useAuth";
 import axios from "./api/axios";
 import UserProfil from "./layouts/Userprofil/Index";
 import Addcategory from "./layouts/Trainer/Coursesf/addCategory";
-
+import Contact from "./layouts/contact/contact";
+import Admin from "./layouts/Admin/admin";
 
 // import Formateurhome from "./layouts/Trainer/formateurhome";
 // import AddCourseForm from "./layouts/Trainer/addcourse";
@@ -52,6 +52,9 @@ export default function App() {
         <Route index element={<Home />} />
         <Route element={<RequireAuth allowedRoles={['User']} />}>
           <Route path="courses" element={<Courses />} />
+          <Route path="contact" element={<Contact />} />
+          
+
         </Route>
         <Route element={<RequireAuth allowedRoles={['User']} />}>
           <Route path="courses/:idCateg" element={<Course />} />
