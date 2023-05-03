@@ -23,8 +23,8 @@ class StudentController extends AbstractController
 
 
     // Api to subscribe student to course
-    #[Route('/subscribe/{courseId}', name: 'subscribe_to_course', methods: ['GET'])]
-    #[OA\Get(description: ' create a subscription')]
+    #[Route('/subscribe', name: 'subscribe_to_course', methods: ['POST'])]
+    #[OA\Post(description: ' create a subscription')]
 
     #[OA\Response(
         response : 200,
@@ -32,7 +32,7 @@ class StudentController extends AbstractController
         content: new Model(type: User::class, groups: ['main'])
     )]
     #[OA\Tag(name:'Student')]
-    public function subscribeToCourse(Request $request, $courseId, CourseRepository $courseRepository): Response
+    public function subscribeToCourse(Request $request, CourseRepository $courseRepository): Response
     {
         $currentUser  = $this->getUser();
         // Check if the current user is a student
@@ -40,6 +40,8 @@ class StudentController extends AbstractController
         {
             return $this->json(["message" => "You are not a student and you are not authorized to view subscribed courses!"], 403);
         }
+        $content = json_decode($request->getContent(), true);
+        $courseId = $content["id"];
         $course = $courseRepository->find($courseId);
         if(!$course)
         {
@@ -159,7 +161,7 @@ class StudentController extends AbstractController
         $user->setFirstName($content["firstName"]);
         $user->setLastName($content["lastName"]);
 
-         $pictureFile = $request->files->get('myPicture');
+         $pictureFile = $request->files->get('picture');
 
         if ($pictureFile){
             //generate a name  for picture

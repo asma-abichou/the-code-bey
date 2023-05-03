@@ -93,7 +93,7 @@ class TeacherController extends AbstractController
             ],
             example: ['firstName' => 'Asma',
                       'lastName' => 'Abichou',
-                      'picture' => '',
+                      'profilePicture' => '',
             ]
         ))]
     )]

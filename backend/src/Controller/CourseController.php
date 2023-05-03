@@ -42,6 +42,28 @@ class CourseController extends AbstractController
         return $this->json($courseRepository->findAll(), 200, [], ['groups' => ['main']]);
     }
 
+    // Api to get courses based on category ID
+    #[Route('/category/{categoryId}', name: 'list_courses_by_category', methods: ['GET'])]
+    #[OA\Get(description: 'get the list of courses related to a specific category')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the list of courses related to a specific category',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: Course::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'Course')]
+    public function listOfCoursesByCategory(CourseRepository $courseRepository, CategoryRepository $categoryRepository, $categoryId): Response
+    {
+        $category = $categoryRepository->find($categoryId);
+        if(!$category)
+        {
+            return $this->json(["message" => "There is not a category with that ID!"], 404);
+        }
+        return $this->json($category->getCourses(), 200, [], ['groups' => ['main']]);
+    }
+
     // Api to add a course
     #[Route('/{categoryId}', name: 'add_course', methods: ['POST'])]
     #[OA\Post(description: 'Creates a new course')]
