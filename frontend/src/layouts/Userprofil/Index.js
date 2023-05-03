@@ -159,7 +159,7 @@ const UserProfil = () => {
 
         <div className="card">
 
-          <h1>Profile Card</h1>
+       
           <label className="custom-file-upload fas">
             <div className="img-wrap">
               <img className='Img' for="photo-upload" src={state.imagePreviewUrl} />

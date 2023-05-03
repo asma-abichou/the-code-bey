@@ -96,7 +96,7 @@ const MainLayout = () => {
               <Link to="/About">
                 <li>About</li>
               </Link>
-              <Link to="/courses">
+              <Link to="/contact">
                 <li>Contact US</li>
               </Link>
 

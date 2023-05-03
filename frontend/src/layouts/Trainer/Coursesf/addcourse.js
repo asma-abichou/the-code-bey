@@ -84,7 +84,7 @@ const handleCategoryChange=(event)=>{
         ) : (
           <form className='form2' onSubmit={handleSubmit}>
             <div className="form-title">
-              <h1>Add Course</h1>
+              <h1 className='Sign'>Add Course</h1>
             </div>
             <div className="form-row">
               <label htmlFor="name">Titre :</label>

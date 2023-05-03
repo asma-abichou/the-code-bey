@@ -8,7 +8,8 @@
 body {
   background-color :  #020918; 
  width: 100vw;
-  
+ scroll-behavior: smooth !important;
+
 }
 a {
   text-decoration: none;

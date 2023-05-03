@@ -19,7 +19,7 @@
     }
     .btn{
     color: white;
-    background-color: red;
+    background-color: rgb(0, 64, 255);
     border-radius: 5px;
     font-size: larger;
     display: block;
