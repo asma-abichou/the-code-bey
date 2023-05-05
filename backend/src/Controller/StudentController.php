@@ -21,11 +21,19 @@ class StudentController extends AbstractController
     {
     }
 
-
     // Api to subscribe student to course
     #[Route('/subscribe', name: 'subscribe_to_course', methods: ['POST'])]
     #[OA\Post(description: ' create a subscription')]
-
+    #[OA\RequestBody(
+        description: 'filter course ',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'id', type:'int')
+            ],
+               example: ['id' => '3'
+            ]
+        )
+    )]
     #[OA\Response(
         response : 200,
         description: 'Returns the subscribe course',
