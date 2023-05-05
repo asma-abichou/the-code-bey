@@ -13,6 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Course
 {
     #[ORM\Id]
+    #[Groups('main')]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
