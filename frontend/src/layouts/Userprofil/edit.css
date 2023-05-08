@@ -46,7 +46,7 @@
   display: flex;
   flex-direction: column;
 }
-input[type="file"] {
+.input[type="file"] {
   display: none;
 }
 
@@ -155,7 +155,7 @@ input::placeholder {
   color: #fff;
   width: 180px;
 }
-button:hover {
+.edit-button:hover {
   left: 0;
   color: #5d1a1a;
   width: 180px;

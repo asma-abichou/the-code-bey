@@ -15,7 +15,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { Avatar, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import img from '../../../static/images/yassouna.jpg'
+import img from '../../../static/images/teacher.jpg'
 import { Link } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
 
@@ -102,7 +102,7 @@ const Profil = () => {
                 <Avatar
                     className="avatar"
                     alt="Remy Sharp"
-                    src="../../../static/images/"
+                    src="../../../static/images/teacher.jpg"
                     sx={{ width: 150, height: 150 }}
                 />
                 <CardContent>

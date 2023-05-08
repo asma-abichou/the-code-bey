@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import png from "../../python.svg";
 import { Link, useOutletContext } from "react-router-dom";
 import axios from "../../api/axios";
+import Footer from "../../components/footer";
 axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
   "token"
 )}`;
@@ -52,9 +53,9 @@ export default function Courses() {
       });
   };
   return (
-    <div className="body">
+    <div className="body2">
       <div className="courses-div">
-        <h1 className="Sign">Erolled Cources</h1>
+        <h1 className="Sign">Categories</h1>
         <div className="area">
           {response.map((course, i) => {
             return (
@@ -63,26 +64,14 @@ export default function Courses() {
                   <p> {course.title} </p>
                 </div>
               </Link>
+             
             );
-          })}
+          })} 
         </div>
-      </div>
+      
 
-      <div className="courses-div">
-        <h1>Enroll New Cources</h1>
-        <div className="area">
-          {response.map((course, i) => {
-            return (
-              <Link key={i} to={course.to}>
-                <div className="box grid-item">
-                  <p> {course.name}</p>
-                  <img alt={course.name} src={course.logo} className="llogo" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
+     </div>
+     <Footer/>
     </div>
   );
 }

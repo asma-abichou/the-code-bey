@@ -6,7 +6,8 @@ import { Draggable } from 'gsap/all'
 import { Link ,useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 
-function Body({auth}) {
+function Body() {
+  const { auth } = useAuth();
   console.log("body : outside ule / "+auth?.user );
   const [authenticated , setAuth] = useState();
   const navigate = useNavigate();
@@ -276,7 +277,7 @@ Draggable.create("#dragger",{
   </div>
     </div>
     <div className='buttons'>
-    { authenticated?.user ? <p> welcome {auth.user} </p>  :
+    { auth?.user ? <h1 className='Sign'> welcome {auth.user} </h1>  :
        <>
        <button id="login" onClick={()=>navigate("/login", { replace: true })} className='grid-item'> <Link to="login">Login</Link> </button>
       <button onClick={()=>navigate("/register", { replace: true })} className='grid-item'> <Link to="register">Register</Link> </button>

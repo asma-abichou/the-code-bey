@@ -167,11 +167,11 @@ const UserProfil = () => {
           </label>
           <div className="name">{username}</div>
           <div className="lastName">{lastName}</div>
-          <button type="submit" className="edit button2" onClick={handleSubmit}>
+          <button type="submit" className="edit button2 edit-button" onClick={handleSubmit}>
             Edit Profile{" "}
           </button>
-          <Link to="../courses/All">
-          <button className="edit button2" >
+          <Link to="/MyCourses">
+          <button className="edit button2 edit-button" >
             My Courses{" "}
           </button>
           </Link>

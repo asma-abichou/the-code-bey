@@ -35,6 +35,14 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState("");
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Token exists, navigate to home page
+      navigate("/");
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     userRef.current.focus();
   }, []);
 
@@ -60,6 +68,8 @@ const Login = () => {
         console.log(response.data.roles);
         console.log(JSON.stringify(response?.data));
         console.log(response.roles);
+        console.log(response.data.id);
+
         //console.log(JSON.stringify(response));
         const accessToken = jwt_decode(response.data.token);
         localStorage.setItem("token", response.data.token);
@@ -76,7 +86,7 @@ const Login = () => {
         setAuth({ user, pwd, is_staff, accessToken });
         setUser("");
         setPwd("");
-        navigate("/courses", { replace: true });
+        navigate("/", { replace: true });
       })
       .catch((err) => {
         console.log("err", err);
