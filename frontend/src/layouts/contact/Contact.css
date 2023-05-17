@@ -160,3 +160,67 @@
   flex-wrap: nowrap;
 
 }
+
+
+
+/* Style for the whole form */
+.full-width {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* Style for the form label */
+.contact {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Style for the input fields */
+.form-control {
+  border-radius: 5px;
+  border: none;
+  background-color: #f7f7f7;
+  color: #333333;
+  font-size: 1rem;
+  padding: 10px;
+  margin-bottom: 20px;
+  box-shadow: none;
+}
+
+/* Style for the textarea field */
+.form-control.textarea {
+  height: 150px;
+}
+
+/* Style for the submit button */
+.btn-primary {
+  background-color: #1abc9c;
+  border: none;
+  color: #ffffff;
+  font-size: 1rem;
+  padding: 10px 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: #16a085;
+}
+
+/* Media query for responsiveness */
+@media screen and (max-width: 768px) {
+  .full-width {
+    padding: 10px;
+  }
+  .form-control {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  .btn-primary {
+    font-size: 0.9rem;
+    padding: 8px 25px;
+  }
+}

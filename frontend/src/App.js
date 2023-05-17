@@ -37,8 +37,19 @@ import CourseDash from "./layouts/Admin/components/course/CourseDash";
 import CourseEdit from "./layouts/Admin/components/course/CourseEdit";
 import CourseShow from "./layouts/Admin/components/course/CourseShow";
 import MyCourses from "./layouts/Userprofil/MyCourses";
+import ForgetPsw from "./layouts/authentification/forgotpswd";
+import SearchCourses from "./layouts/courses/searchCourses";
+import AdminCards from "./layouts/Admin/components/AdminCards";
+import Reunion from "./layouts/LiveStream/reunion";
+import { SocketProvider } from "./context/Socket";
 
-
+import history from './history';
+// pages
+import StreamList from './layouts/streams/StreamList';
+import StreamCreate from './layouts/streams/StreamCreate';
+import StreamEdit from './layouts/streams/StreamEdit';
+import StreamWatch from './layouts/streams/StreamWatch';
+import ProfilEdit from "./layouts/Trainer/Profil/ProfilEdit";
 // import Formateurhome from "./layouts/Trainer/formateurhome";
 // import AddCourseForm from "./layouts/Trainer/addcourse";
 export default function App() {
@@ -49,77 +60,95 @@ export default function App() {
     console.log(setAuth);
   }, [])
   return <>
+    
+      <Routes>
 
-    <Routes>
-      <Route path="/" element={<MainLayout />}>
-        <Route path="login" element={<Login />} />
-        {/* <Route path="AddCourseForm" element={<AddCourseForm/>} /> */}
 
-        <Route path="Reset" element={<ForgotPassword />} />
-        <Route path="About" element={<About />} />
+        <Route path="/" element={<MainLayout />}>
+          <Route path="login" element={<Login />} />
+          {/* <Route path="AddCourseForm" element={<AddCourseForm/>} /> */}
 
-        {/* <Route path="formateurSpace" element={<Formateurhome/>} /> */}
-        <Route path="register" element={<Register />} />
-        <Route path="unauthorized" element={<Unauthorized />} />
-        <Route index element={<Home />} />
-        <Route element={<RequireAuth allowedRoles={['User']} />}>
-          <Route path="courses" element={<Courses />} />
-          <Route path="contact" element={<Contact />} />
-          
+          <Route path="Reset" element={<ForgetPsw />} />
+          <Route path="About" element={<About />} />
+
+          {/* <Route path="formateurSpace" element={<Formateurhome/>} /> */}
+          <Route path="register" element={<Register />} />
+          <Route path="search" element={<SearchCourses />} />
+          <Route path="search/:coursname" element={<CoursVid />} />
+          <Route path="unauthorized" element={<Unauthorized />} />
+          <Route index element={<Home />} />
+          <Route element={<RequireAuth allowedRoles={['User']} />}>
+            <Route path="courses" element={<Courses />} />
+            <Route path="contact" element={<Contact />} />
+
+            {/* <Route path="livestream" element={<livee/>} /> */}
+            <Route path="homelive" element={<Reunion />} />
+
+
+
+          </Route>
+          <Route element={<RequireAuth allowedRoles={['User']} />}>
+            <Route path="courses/:CategoryID" element={<Course />} />
+            <Route path="courses/All" element={<Course />} />
+            <Route path="courses/:CategoryID/:courseID" element={<CoursVid />} />
+          </Route>
+          <Route element={<RequireAuth allowedRoles={['User']} />}>
+            <Route path="admin" element={<Admin />}>
+
+              <Route path="" element={<AdminCards></AdminCards>} />
+
+              <Route path="students" element={<StudentDash></StudentDash>} />
+              <Route
+                path="students/edit/:id"
+                element={<StudentEdit></StudentEdit>}
+              />
+              <Route
+                path="students/show/:id"
+                element={<StudentShow></StudentShow>}
+              />
+
+              <Route path="teachers" element={<TeacherDash></TeacherDash>} />
+              <Route
+                path="teachers/edit/:id"
+                element={<TeacherEdit></TeacherEdit>}
+              />
+              <Route
+                path="teachers/show/:id"
+                element={<TeacherShow></TeacherShow>}
+              />
+
+              <Route path="courses" element={<CourseDash></CourseDash>} />
+              <Route
+                path="courses/edit/:id"
+                element={<CourseEdit></CourseEdit>}
+              />
+              <Route
+                path="courses/show/:id"
+                element={<CourseShow></CourseShow>}
+              />
+            </Route>
+          </Route>
+          <Route element={<RequireAuth allowedRoles={['User']} />}>
+            <Route path="profil" element={<Profil />} />
+            <Route path="userprofil" element={<UserProfil />} />
+            <Route path="profil/edit/:id" element={<ProfilEdit></ProfilEdit>} />
+            <Route path="MyCourses" element={<MyCourses />} />
+            <Route path="MyCourses/:username" element={<CoursVid />} />
+            <Route path="Addcourse" element={<Addcourse />} />
+            <Route path="Addcategory" element={<Addcategory />} />
+          </Route>
+
+          <Route history={history}>
+            <Route path="streams" element={<StreamList />}/>
+            <Route exact path="stream/new" element={<StreamCreate />}/>
+            <Route path="stream/edit/:id"  element={<StreamEdit />}/>
+            <Route path="stream/watch/:id" element={<StreamWatch />}/>
+          </Route>
 
         </Route>
-        <Route element={<RequireAuth allowedRoles={['User']} />}>
-          <Route path="courses/:CategoryID" element={<Course />} />
-          <Route path="courses/All" element={<Course />} />
-          <Route path="courses/:CategoryID/:courseID" element={<CoursVid />} />
-        </Route>
-        <Route element={<RequireAuth allowedRoles={['User']} />}>
-        <Route path="admin" element={<Admin />}>
-
-<Route path="students" element={<StudentDash></StudentDash>} />
-<Route
-  path="students/edit/:id"
-  element={<StudentEdit></StudentEdit>}
-/>
-<Route
-  path="students/show/:id"
-  element={<StudentShow></StudentShow>}
-/>
-
-<Route path="teachers" element={<TeacherDash></TeacherDash>} />
-<Route
-  path="teachers/edit/:id"
-  element={<TeacherEdit></TeacherEdit>}
-/>
-<Route
-  path="teachers/show/:id"
-  element={<TeacherShow></TeacherShow>}
-/>
-
-<Route path="courses" element={<CourseDash></CourseDash>} />
-<Route
-  path="courses/edit/:id"
-  element={<CourseEdit></CourseEdit>}
-/>
-<Route
-  path="courses/show/:id"
-  element={<CourseShow></CourseShow>}
-/>
-</Route>
-        </Route>
-        <Route element={<RequireAuth allowedRoles={['User']} />}>
-          <Route path="profil" element={<Profil />} />
-          <Route path="userprofil" element={<UserProfil />} />
-          <Route path="MyCourses" element={<MyCourses />} />
-          <Route path="Addcourse" element={<Addcourse />} />
-          <Route path="Addcategory" element={<Addcategory />} />
-        </Route>
 
 
-      </Route>
-
-
-    </Routes>
+      </Routes>   
   </>
 
 

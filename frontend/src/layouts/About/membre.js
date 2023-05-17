@@ -1,10 +1,13 @@
 import React from "react";
-import "./Member.css"; //importin css style
-import { Card } from "react-bootstrap"; //importing BOOTSTRAP
-
+import { Card } from "react-bootstrap";
+import "./membre.css"
+import img from "../../static/images/teacher.jpg"
 const Member = (props) => {
   const { member } = props;
-  const { email, jobTitle, fullName, img } = member;
+  const teacher = member?.teacher || {};
+  const { firstName = '', lastName = '', email = '' } = teacher;
+  const courses = member?.courses || [];
+  const { title = '', description = '', duration = '', img= '' } = courses[0] || {};
   return (
     <Card className="team-member border-0">
       <div className="img-box" data-aos="fade-left">
@@ -13,8 +16,11 @@ const Member = (props) => {
       </div>
 
       <Card.Body>
-        <h6>{fullName}</h6>
-        <p>{jobTitle}</p>
+        <h6>{`${firstName} ${lastName}`}</h6>
+        {img}
+        <p>{title}</p>
+        <p>{description}</p>
+        <p>{duration}</p>
       </Card.Body>
     </Card>
   );

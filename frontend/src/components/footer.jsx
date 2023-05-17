@@ -11,7 +11,7 @@ const Footer = () => {
         <li className="footer-item">
           <img src={logo} alt="" />
           <p>
-            UCera is perhaps the biggest name in online courses and education.
+          TheCodeBey Programming Life 
             
           </p>
         </li>
@@ -22,8 +22,8 @@ const Footer = () => {
         <li className="footer-item">
           <h4>Contact</h4>
           <p>
-            Mobile: (+88) - 1990 - 6886 <br /> Hotline: 1800 - 1102 <br /> Mail:
-            contact@ucera.com
+            Mobile: (+216) 54 701 163  <br /> code postal: <br /> Mail:
+            neuralbey@gmail.com
           </p>
         </li>
         <li className="footer-item">

@@ -10,7 +10,7 @@
   background-size: 80%;
 }
 
-.card {
+.Card {
   width: 310px;
   height: 627px;
   padding: 15px;
@@ -34,7 +34,7 @@
     background-position-y: 0%;
   }
 }
-.card {
+.Card{
   display: flex;
   flex-direction: column;
   justify-content: center;

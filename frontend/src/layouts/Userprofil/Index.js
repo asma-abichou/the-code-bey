@@ -33,7 +33,7 @@ const UserProfil = () => {
   });
 
   const Profile = ({ onSubmit, src, username, lastName }) => (
-    <div className="card">
+    <div className="Card">
       <form onSubmit={onSubmit}>
         <h1>Profile Card</h1>
         <label className="custom-file-upload fas">
@@ -119,7 +119,7 @@ const UserProfil = () => {
   return (
     <div className='body'>
       {active === "edit" ? (
-        <div className="card">
+        <div className="Card">
           <label htmlFor="photo-upload" className="custom-file-upload fas">
             <div className="img-wrap img-upload">
               <img  for="photo-upload" alt="alt" src={imagePreviewUrl} />
@@ -157,7 +157,7 @@ const UserProfil = () => {
         </div>
       ) : (
 
-        <div className="card">
+        <div className="Card">
 
        
           <label className="custom-file-upload fas">

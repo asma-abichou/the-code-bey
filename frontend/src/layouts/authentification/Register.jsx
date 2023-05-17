@@ -1,7 +1,8 @@
 import "../../styles/layouts/Login.css";
-import { Link, useOutletContext, useNavigate } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import axios from "../../api/axios";
+import "../../styles/layouts/registre.css";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const NAME_REGEX = /^[a-zA-Z\s]*.{3,23}$/;
@@ -9,7 +10,6 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EML_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-const REGISTER_URL = "users/register/";
 
 const Register = () => {
   const [animationIsFinished, setAnimationIsFinished] = useOutletContext();

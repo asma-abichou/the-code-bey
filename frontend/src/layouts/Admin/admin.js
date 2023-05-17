@@ -39,6 +39,7 @@ function Admin(props) {
       <Divider />
       <List>
         {[
+          { label: "Admin", to: "" },
           { label: "Students", to: "students" },
           { label: "Teachers", to: "teachers" },
           { label: "Courses", to: "courses" },
@@ -83,7 +84,6 @@ function Admin(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Responsive drawer
           </Typography>
         </Toolbar>
       </AppBar>
