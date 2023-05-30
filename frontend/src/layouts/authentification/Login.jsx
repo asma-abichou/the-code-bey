@@ -71,9 +71,12 @@ const Login = () => {
         console.log(response.data.id);
 
         //console.log(JSON.stringify(response));
+        console.log(response.data.token);
         const accessToken = jwt_decode(response.data.token);
+        // localStorage.setItem("accessToken", accessToken);
+        console.log(accessToken.roles[0]);
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("roles", accessToken.roles);
+        localStorage.setItem("roles", accessToken.roles[0]);
 
         localStorage.setItem("pwd", pwd);
 

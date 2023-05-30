@@ -34,12 +34,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 250px;
+    min-height: 200px;
     border-radius: 10px;
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
     background-color: #fff;
+   
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
+  }
+  .cardcateg{
+    background-image: url(../../static/images/backgroundCard.jpg);
+
   }
   
   .box:hover {

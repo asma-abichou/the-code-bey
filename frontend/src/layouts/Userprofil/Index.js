@@ -132,7 +132,7 @@ const UserProfil = () => {
               id="firstName"
               type="text"
               maxLength="25"
-              placeholder="Alexa"
+              placeholder="enter your FirstName"
               required
               value={firstName}
               onChange={editFirstName}
@@ -145,7 +145,7 @@ const UserProfil = () => {
               id="lastName"
               type="text"
               maxLength="35"
-              placeholder="It's a nice day!"
+              placeholder="enter your lastName"
               required
               value={lastName}
               onChange={editLastName}

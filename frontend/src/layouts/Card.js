@@ -11,10 +11,14 @@ const Card = (props) => {
 
     navigate(`${title}`);
   };
+  console.log('££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££')
+
   const subscribe = () => {
+    console.log(id)
     axios.post('http://127.0.0.1:8000/api/student/subscribe', { id }, {
       headers: {
-         "Content-Type": "application/json" ,
+        "Content-Type": "application/json",
+
 
       }
 
@@ -47,13 +51,13 @@ const Card = (props) => {
         </div>
       </div>
       <div className='buttn' >
-      {!subscribed ?
-        <button onClick={subscribe} className='edit-button'>
-          <a className='Sign'>
-            Subscribe
-          </a>
-        </button>
-      : <></>}
+        {!subscribed ?
+          <button onClick={subscribe} className='edit-button'>
+            <a className='Sign'>
+              Subscribe
+            </a>
+          </button>
+          : <></>}
         <button onClick={navigatevid} className='edit-button'>
           <a className='Sign'>
             view more
