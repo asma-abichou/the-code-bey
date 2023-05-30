@@ -70,6 +70,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
+    #[ORM\Column]
+    private ?bool $isDeleted = false;
+
     public function __construct()
     {
         $this->createdCourses = new ArrayCollection();
@@ -250,6 +253,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }

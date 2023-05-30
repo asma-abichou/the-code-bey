@@ -85,6 +85,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $qb = $this->createQueryBuilder('u');
         $qb->select('u')
             ->where('u.roles LIKE :role')
+            ->andWhere('u.isDeleted = 0')
             ->setParameter('role', '%"'.$role.'"%');
         return $qb->getQuery()->getResult();
     }

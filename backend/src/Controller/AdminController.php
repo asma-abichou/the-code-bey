@@ -156,6 +156,7 @@ class AdminController extends AbstractController
 
     }
 
+    // Admin delete a student
      #[Route('/students/delete/{id}', name: 'admin_students_delete', methods: ['DELETE'])]
      #[OA\Delete(description: 'Deletes a student')]
      #[OA\Response(
@@ -170,11 +171,11 @@ class AdminController extends AbstractController
          if (!$student) {
              return $this->json(["message" => "There is no student with that ID"]);
          }
-         // delete student with the remove function
-         $this->entityManager->remove($student);
+         // Mark student as deleted
+         $student->setIsDeleted(true);
+         $this->entityManager->persist($student);
          $this->entityManager->flush();
-         return $this->json($student, 200, [], ['groups' => ['main']]);
-
+         return $this->json(["message" => "User successfully deleted!"]);
      }
 
 
