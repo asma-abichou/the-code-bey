@@ -13,12 +13,12 @@ axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
 )}`;
 
 const courses = [
-  { to: "python", name: "Python", logo: png },
-  { to: "reactjs", name: "Reactjs", logo: png },
-  { to: "laravel", name: "Laravel", logo: png },
-  { to: "javaScript", name: "JavaScript", logo: png },
-  { to: "machine learning ", name: "Machine Learning", logo: png },
-  { to: "django", name: "Django", logo: png },
+  { to: "python", title: "Python", logo: png },
+  { to: "reactjs", title: "Reactjs", logo: png },
+  { to: "laravel", title: "Laravel", logo: png },
+  { to: "javaScript", title: "JavaScript", logo: png },
+  { to: "machine learning ", title: "Machine Learning", logo: png },
+  { to: "django", title: "Django", logo: png },
 ];
 //to be replaced when consomming API
 
@@ -60,7 +60,7 @@ export default function Courses() {
           {response.map((course, i) => {
             return (
               <Link key={i} to={""+course.id}>
-                <div className="box grid-item">
+                <div className="cardcateg box grid-item">
                   <p> {course.title} </p>
                 </div>
               </Link>

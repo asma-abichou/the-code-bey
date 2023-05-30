@@ -70,7 +70,7 @@ const Profil = () => {
             { text: "Addcategory", link: "/Addcategory" },
 
             { text: "chat", link: "/chat" },
-            { text: "LiveStream", link: "/livestream" },
+            { text: "LiveStream", link: "/streams" },
           ].map((item, index) => (
             <ListItem key={item.text} disablePadding>
               <ListItemButton component={Link} to={item.link}>
@@ -129,8 +129,8 @@ const Profil = () => {
             <EditIcon color="primary"></EditIcon>{/*bouton edit badel el 1 b id  */}
           </Link>
           <Typography variant="body2" color="text.secondary">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
+          Formateur expérimenté en programmation, doté d'une solide expertise dans l'enseignement des langages de programmation
+           
           </Typography>
         </CardContent>
         <CardActions>

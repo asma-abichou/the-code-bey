@@ -1,6 +1,5 @@
-/* eslint-disable react/prop-types */
 import React, { useLayoutEffect } from "react";
-import { Container } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { createStream } from "../../redux/actions";
 import StreamForm from "../../components/stream/StreamForm";
@@ -21,8 +20,11 @@ const StreamCreate = (props) => {
   };
 
   return (
-    <div>
-      <Container style={{ marginTop: 100, marginBottom: 250, marginLeft: 50 }}>
+    <div className="StreamCreate">
+      <Container maxWidth="sm" style={{ marginTop: 100, marginBottom: 250 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Create a Stream
+        </Typography>
         <StreamForm onSubmit={onFormSubmit} />
       </Container>
       <Footer />

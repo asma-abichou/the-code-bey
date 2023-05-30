@@ -107,7 +107,7 @@ const Register = () => {
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/register",
-        JSON.stringify({
+       ({
           username: user,
           email: email,
           firstName: firstName,
@@ -145,12 +145,14 @@ const Register = () => {
   return (
     <>
       {success ? (
-        <section>
-          <h1 color="white">Success!</h1>
-          <p className="sign">
-            Click <Link to="/login">here</Link> to go to the login page.
-          </p>
-        </section>
+     <section style={{ background: "#333", padding: "20px" }}>
+     <h1 style={{ color: "#fff", textAlign: "center" }}>Success!</h1>
+     <p style={{ textAlign: "center", color: "#fff" }}>
+       Click <Link to="/login" style={{ color: "#007bff" }}>here</Link> to go to the login page.
+     </p>
+   </section>
+   
+     
       ) : (
         <section>
           <p

@@ -5,7 +5,7 @@ import useAuth from "../../../hooks/useAuth";
 import axios from '../../../api/axios';
 import { Last } from 'react-bootstrap/esm/PageItem';
 import Course from '../../courses/course';
-
+import './edit.css';
 const ProfileEdit = () => {
   axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
     "token"
@@ -116,8 +116,7 @@ const ProfileEdit = () => {
   const { imagePreviewUrl, firstName, lastName, active } = state;
 
   return (
-    <div className='body'>
-      {active === "edit" ? (
+    <div className='body editprofil'>
         <div className="card">
           <label htmlFor="photo-upload" className="custom-file-upload fas">
             <div className="img-wrap img-upload">
@@ -131,7 +130,7 @@ const ProfileEdit = () => {
               id="firstName"
               type="text"
               maxLength="25"
-              placeholder="Alexa"
+              placeholder="firstName"
               required
               value={firstName}
               onChange={editFirstName}
@@ -144,7 +143,7 @@ const ProfileEdit = () => {
               id="lastName"
               type="text"
               maxLength="35"
-              placeholder="It's a nice day!"
+              placeholder="lastName"
               required
               value={lastName}
               onChange={editLastName}
@@ -152,31 +151,16 @@ const ProfileEdit = () => {
           </div>
           <button type="submit" className="save button2" onClick={handleSubmit}>
             Save{" "}
-          </button>
+          </button><a
+          href="#"
+          className="go-back-link"
+          onClick={() => window.history.back()}
+          style={{color:"black"}}
+        >
+          Go back
+        </a>
         </div>
-      ) : (
-
-        <div className="card">
-
-       
-          <label className="custom-file-upload fas">
-            <div className="img-wrap">
-              <img className='Img' for="photo-upload" src={state.imagePreviewUrl} />
-            </div>
-          </label>
-          <div className="name">{username}</div>
-          <div className="lastName">{lastName}</div>
-          <button type="submit" className="edit button2 edit-button" onClick={handleSubmit}>
-            Edit Profile{" "}
-          </button>
-          <Link to="/MyCourses">
-          <button className="edit button2 edit-button" >
-            My Courses{" "}
-          </button>
-          </Link>
-          
-        </div>
-      )}
+        
     </div>
   );
 

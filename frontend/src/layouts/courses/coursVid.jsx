@@ -5,6 +5,7 @@ import Footer from "../../components/footer";
 import ReactVideoPlayer from "../ReactVideoPlayer";
 import "./coursVid.css";
 import introvide from "../h.mkv";
+import Comments from "./components/comments/Comments";
 // requete ml back feha cours id chyaatik cours video url fl introvid cours id fl h1
 const CoursVid = () => {
   const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
@@ -18,6 +19,7 @@ const CoursVid = () => {
     <div className="Course-content">
       <h1 style={{ color: "white" }}>{courseID}</h1>
       <ReactVideoPlayer video={introvide} />
+      <Comments></Comments>
       <Footer />
     </div>
   );
