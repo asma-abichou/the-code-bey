@@ -22,12 +22,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['edit-profile', 'students-list', 'student-show'])]
     private ?int $id = null;
 
-    #[Groups('edit-profile')]
+    #[Groups(['edit-profile', 'students-list', 'student-show'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
+    #[Groups(['students-list', 'student-show'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $username = null;
 
@@ -48,11 +50,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
 
-    #[Groups('edit-profile')]
+    #[Groups(['edit-profile', 'students-list', 'student-show'])]
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
-    #[Groups('edit-profile')]
+    #[Groups(['edit-profile', 'students-list', 'student-show'])]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
@@ -63,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinTable(name: 'course_student')]
     private Collection $subscribedCourses;
 
-    #[Groups('edit-profile')]
+    #[Groups(['edit-profile', 'student-show'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 

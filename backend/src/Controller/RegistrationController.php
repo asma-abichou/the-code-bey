@@ -65,6 +65,9 @@ class RegistrationController extends AbstractController
         } elseif ($content["role"] === "teacher")
         {
             $user = $this->createUser($request, ["ROLE_TEACHER"]);
+        }  elseif ($content["role"] === "admin")
+        {
+            $user = $this->createUser($request, ["ROLE_ADMIN"]);
         } else {
             return $this->json(["message" => "role is not correct!"], 400);
         }
