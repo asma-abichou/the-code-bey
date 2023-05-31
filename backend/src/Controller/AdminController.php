@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Course;
 use App\Entity\User;
 use App\Repository\CourseRepository;
 use App\Repository\UserRepository;
@@ -18,8 +19,9 @@ use OpenApi\Attributes as OA;
 class AdminController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private UserRepository $userRepository
+        private readonly EntityManagerInterface  $entityManager,
+        private readonly UserRepository $userRepository,
+        private readonly CourseRepository $courseRepository
     )
     {
     }
@@ -84,6 +86,40 @@ class AdminController extends AbstractController
     {
         return $this->json($this->userRepository->find($id), 200, [], ['groups' => ['student-show']]);
     }
+    // Admin show list of all courses
+    #[Route('/course/list', name: 'admin_course_list', methods: ['GET'])]
+    #[OA\Get(description: 'Get the list of all courses ')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the list of all courses',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: User::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'admin')]
+    public function adminCoursesList(): Response
+    {
+        $courses = $this->courseRepository->findAll();
+        return $this->json($courses, 200, [], ['groups' => ['main']]);
+    }
+    // Admin show selected courses
+    #[Route('/course/show/{id}', name: 'admin_course_show', methods: ['GET'])]
+    #[OA\Get(description: 'Get more details about course selected  ')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns details course',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: User::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'admin')]
+    public function adminCourseShow($id): Response
+    {
+        return $this->json($this->courseRepository->find($id), 200, [], ['groups' => ['main']]);
+    }
+
 
     // Admin  update a  student
     #[Route('/students/edit/{id}', name: 'admin_student_update', methods: ['PUT'])]
@@ -209,7 +245,6 @@ class AdminController extends AbstractController
     public function adminUpdateUser(User $user, Request $request): JsonResponse
     {
         // Get the request content as an array
-
        $content = json_decode($request->getContent(), true);
         $user->setfirstName($content["firstName"]);
         $user->setLastName($content["lastName"]);
@@ -244,6 +279,93 @@ class AdminController extends AbstractController
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         return $this->json(["message" => "User successfully deleted!"]);
+    }
+
+
+
+
+    //COURSES
+    // Admin  update a course
+    #[Route('/course/edit/{id}', name: 'admin_course_update', methods: ['PUT'])]
+    #[OA\Put(description: 'Update a course')]
+    #[OA\RequestBody(
+        description: 'Update a course by Id',
+        content: [new OA\MediaType(mediaType: "multipart/form-data" , schema: new OA\Schema(
+            properties: [
+                new OA\Property(property: "myVideo", type: "file", format:"binary"),
+                new OA\Property(property: 'title', type:'string'),
+                new OA\Property(property: 'description', type:'string'),
+                new OA\Property(property: 'duration', type:'string')
+            ],
+            example: ['title' => 'Fullstack development',
+                'description' => 'this is a fullstack development course',
+                'duration' => '2 hours',
+                'video' => '']
+        ))]
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the updated course',
+        content: new Model(type: Course::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'admin')]
+    public function adminUpdateCourse( $id, Request $request): Response
+    {
+        if (!$this->isGranted("ROLE_ADMIN"))
+        {
+            return $this->json(["message" => "You are not authorized to update this course"], 403);
+        }
+        $course =$this->courseRepository->find($id);
+        if (!$course) {
+            return $this->json(["message" => "There is no course with that ID"]);
+        }
+        // Get the request content as an array
+        $content = $request->request->all();
+        /* @var UploadedFile $videoFile */
+
+        $videoFile = $request->files->get('myVideo');
+
+        if($videoFile)
+        {
+            $uploadedVideo = $this->videoUpload($videoFile);
+        }
+        if(isset($content["title"])) $course->setTitle($content["title"]);
+        if(isset($content["description"])) $course->setDescription($content["description"]);
+        $course->setUpdatedAt(new DateTimeImmutable());
+        if($videoFile)
+        {
+            $course->setVideo($uploadedVideo["path"]);
+            $course->setDuration($uploadedVideo["duration"]);
+        }
+        $this->entityManager->persist($course);
+        $this->entityManager->flush();
+        return $this->json($course, 200, [], ['groups' => ['main']]);
+    }
+
+
+    // Admin  delete a course
+    #[Route('/course/delete/{id}', name: 'admin_teacher_delete', methods: ['DELETE'])]
+    #[OA\Delete(description: 'Deletes a course')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the deleted category',
+        content: new Model(type: Course::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'admin')]
+    public function adminDeleteCourse($id): Response
+    {
+        $course = $this->courseRepository->find($id);
+        if(!$this->isGranted("ROLE_ADMIN"))
+        {
+            return $this->json(["message" => "You are not an admin  and you are not authorized to add a course!"], 403);
+        }
+
+        if (!$course) {
+            return $this->json(["message" => "There is no course with that ID"]);
+        }
+        $this->entityManager->remove($course);
+        $this->entityManager->flush();
+        return new Response('The course with ID '.$id.' has been deleted');
     }
 
 }
