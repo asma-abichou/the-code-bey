@@ -29,7 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[Groups(['edit-profile', 'students-list', 'student-show'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $username = null;
 
