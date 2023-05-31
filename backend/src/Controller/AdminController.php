@@ -94,9 +94,11 @@ class AdminController extends AbstractController
             properties: [
                 new OA\Property(property: 'firstName', type:'string'),
                 new OA\Property(property: 'lastName', type:'string'),
+                new OA\Property(property: 'username', type:'string'),
             ],
             example: ['firstName' => 'asma',
-                'lastName' =>'ab']
+                'lastName' =>'ab',
+                'username'=>'ab123']
         )
     )]
     #[OA\Response(
@@ -182,9 +184,11 @@ class AdminController extends AbstractController
             properties: [
                 new OA\Property(property: 'firstName', type:'string'),
                 new OA\Property(property: 'lastName', type:'string'),
+                new OA\Property(property: 'username', type:'string'),
             ],
             example: ['firstName' => 'asma',
-            'lastName' =>'ab']
+            'lastName' =>'ab',
+            'username' =>'ab']
         )
     )]
     #[OA\Response(
@@ -209,6 +213,7 @@ class AdminController extends AbstractController
        $content = json_decode($request->getContent(), true);
         $user->setfirstName($content["firstName"]);
         $user->setLastName($content["lastName"]);
+        $user->setLastName($content["username"]);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         return $this->json($user, 200, [], ['groups' => 'edit-profile']);
