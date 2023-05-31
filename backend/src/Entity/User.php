@@ -50,11 +50,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
 
-    #[Groups(['edit-profile', 'students-list', 'student-show', 'edit-student', 'teacher-list', 'teacher-edit', 'teacher-delete'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list',  'teacher-delete'])]
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
-    #[Groups(['edit-profile', 'students-list', 'student-show', 'edit-student', 'teacher-list', 'teacher-edit', 'teacher-delete'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list', 'teacher-delete'])]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 

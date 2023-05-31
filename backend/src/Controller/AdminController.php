@@ -248,7 +248,7 @@ class AdminController extends AbstractController
        $content = json_decode($request->getContent(), true);
         $user->setfirstName($content["firstName"]);
         $user->setLastName($content["lastName"]);
-        $user->setLastName($content["username"]);
+        $user->setUsername($content["username"]);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         return $this->json($user, 200, [], ['groups' => 'edit-profile']);
