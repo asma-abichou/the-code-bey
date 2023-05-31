@@ -27,13 +27,14 @@
   margin-bottom: 5px;
 }
 
-.addcourse input[type="text"],
+.addcourse input[type="text"], .addcourse input[type="email"],
 textarea {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
   resize: none;
+  
 }
 
 .addcourse select {
@@ -125,3 +126,4 @@ textarea {
   cursor: pointer;
   background-color: #ddd;
 }
+
