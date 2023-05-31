@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +17,10 @@ use OpenApi\Attributes as OA;
 #[Route('/api/admin')]
 class AdminController extends AbstractController
 {
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private UserRepository $userRepository
+    )
     {
     }
     #[Route('/index', name: 'index_admin', methods: ['GET'])]
@@ -31,10 +35,10 @@ class AdminController extends AbstractController
     )]
     #[OA\Tag(name: 'admin')]
     //count users
-    public function index(UserRepository $userRepository, CourseRepository $courseRepository): Response
+    public function index(CourseRepository $courseRepository): Response
     {
-        $studentsCount = count($userRepository->fetchUsersByRole("ROLE_STUDENT"));
-        $teachersCount = count($userRepository->fetchUsersByRole("ROLE_TEACHER"));
+        $studentsCount = count($this->userRepository->fetchUsersByRole("ROLE_STUDENT"));
+        $teachersCount = count($this->userRepository->fetchUsersByRole("ROLE_TEACHER"));
         $coursesCount = count($courseRepository->findAll());
 
         return $this->json([
@@ -44,7 +48,7 @@ class AdminController extends AbstractController
         ], 200);
     }
 
-
+    // STUDENTS
 
     // Admin show list of all students
     #[Route('/students/list', name: 'admin_students_list', methods: ['GET'])]
@@ -58,30 +62,11 @@ class AdminController extends AbstractController
         )
     )]
     #[OA\Tag(name: 'admin')]
-    public function adminStudentsList(UserRepository $userRepository): Response
+    public function adminStudentsList(): Response
     {
-        $students = $userRepository->fetchUsersByRole("ROLE_STUDENT");
+        $students = $this->userRepository->fetchUsersByRole("ROLE_STUDENT");
         return $this->json($students, 200, [], ['groups' => ['students-list']]);
     }
-
-    // admin show list of all teacher
-    #[Route('/teachers/list', name: 'admin_teachers_list', methods: ['GET'])]
-    #[OA\Get(description: 'Get the list of all teachers')]
-    #[OA\Response(
-        response: 200,
-        description: 'Returns the list of all teachers',
-        content: new OA\JsonContent(
-            type: 'array',
-            items: new OA\Items(ref: new Model(type: User::class, groups: ['main']))
-        )
-    )]
-    #[OA\Tag(name: 'admin')]
-    public function adminTeacherList(UserRepository $userRepository): Response
-    {
-        $teachers = $userRepository->fetchUsersByRole("ROLE_TEACHER");
-        return $this->json($teachers, 200, [], ['groups' => ['teacher-list']]);
-    }
-
 
     // Admin show selected student
     #[Route('/students/show/{id}', name: 'admin_student_show', methods: ['GET'])]
@@ -95,11 +80,81 @@ class AdminController extends AbstractController
         )
     )]
     #[OA\Tag(name: 'admin')]
-    public function adminStudentShow($id, UserRepository $userRepository): Response
+    public function adminStudentShow($id,): Response
     {
-        return $this->json($userRepository->find($id), 200, [], ['groups' => ['student-show']]);
+        return $this->json($this->userRepository->find($id), 200, [], ['groups' => ['student-show']]);
     }
 
+    // Admin  update a  student
+    #[Route('/students/edit/{id}', name: 'admin_student_update', methods: ['PUT'])]
+    #[OA\Put(description: 'Update a student')]
+    #[OA\RequestBody(
+        description: 'Update a student by Id',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'firstName', type:'string'),
+                new OA\Property(property: 'lastName', type:'string'),
+            ],
+            example: ['firstName' => 'asma',
+                'lastName' =>'ab']
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the updated student',
+        content: new Model(type: User::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'admin')]
+    public function adminUpdateStudent($id , Request $request): Response
+    {
+        $student = $this->userRepository->find($id);
+        if (!$student) {
+            return $this->json(["message" => "There is no student with that ID"]);
+        }
+        return $this->adminUpdateUser($student, $request);
+
+    }
+
+    // Admin delete a student
+    #[Route('/students/delete/{id}', name: 'admin_students_delete', methods: ['DELETE'])]
+    #[OA\Delete(description: 'Deletes a student')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the deleted student',
+        content: new Model(type: User::class, groups: ['main'])
+    )]
+    #[OA\Tag(name: 'admin')]
+    public function adminDeleteStudent($id): JsonResponse
+    {
+        $student = $this->userRepository->find($id);
+        if (!$student) {
+            return $this->json(["message" => "There is no student with that ID"]);
+        }
+        return $this->adminDeleteUser($student);
+    }
+
+
+
+
+    // TEACHERS
+
+    // admin show list of all teacher
+    #[Route('/teachers/list', name: 'admin_teachers_list', methods: ['GET'])]
+    #[OA\Get(description: 'Get the list of all teachers')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the list of all teachers',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: User::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'admin')]
+    public function adminTeacherList(): Response
+    {
+        $teachers = $this->userRepository->fetchUsersByRole("ROLE_TEACHER");
+        return $this->json($teachers, 200, [], ['groups' => ['teacher-list']]);
+    }
 
     // Admin show selected teacher
     #[Route('/teacher/show/{id}', name: 'admin_teacher_show', methods: ['GET'])]
@@ -113,110 +168,53 @@ class AdminController extends AbstractController
         )
     )]
     #[OA\Tag(name: 'admin')]
-    public function adminTeacherShow($id, UserRepository $userRepository): Response
+    public function adminTeacherShow($id): Response
     {
-        return $this->json($userRepository->find($id), 200, [], ['groups' => ['student-show']]);
+        return $this->json($this->userRepository->find($id), 200, [], ['groups' => ['student-show']]);
     }
-
-
-    // Admin  update a  student
-    #[Route('/students/edit/{id}', name: 'admin_students_update', methods: ['PUT'])]
-    #[OA\Post(description: ' Edit Student selected ')]
-    #[OA\RequestBody(
-        description: 'Edit student ',
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'firstName', type:'string'),
-                new OA\Property(property: 'lastName', type:'string')
-            ],
-            example: ['fistName' => 'asma',
-                      'lastName' => 'abichou'
-            ]
-        )
-    )]
-    #[OA\Response(
-        response: 200,
-        description: 'Returns the updated student',
-        content: new Model(type: user::class, groups: ['main'])
-    )]
-    #[OA\Tag(name: 'admin')]
-    public function adminUpdateStudent(UserRepository $userRepository , $id , Request $request): Response
-    {
-        $student = $userRepository->find($id);
-        if (!$student) {
-            return $this->json(["message" => "There is no student with that ID"]);
-        }
-        // Get the request content as an array
-        $content = json_decode($request->getContent(), true);
-        $student->setfirstName($content["firstName"]);
-        $student->setLastName($content["lastName"]);
-        $this->entityManager->persist($student);
-        $this->entityManager->flush();
-        return $this->json($student, 200, [], ['edit-student']);
-
-    }
-
-    // Admin delete a student
-     #[Route('/students/delete/{id}', name: 'admin_students_delete', methods: ['DELETE'])]
-     #[OA\Delete(description: 'Deletes a student')]
-     #[OA\Response(
-         response: 200,
-         description: 'Returns the deleted student',
-         content: new Model(type: User::class, groups: ['main'])
-     )]
-     #[OA\Tag(name: 'admin')]
-     public function adminDeleteStudent(UserRepository $userRepository, $id): Response
-     {
-         $student = $userRepository->find($id);
-         if (!$student) {
-             return $this->json(["message" => "There is no student with that ID"]);
-         }
-         // Mark student as deleted
-         $student->setIsDeleted(true);
-         $this->entityManager->persist($student);
-         $this->entityManager->flush();
-         return $this->json(["message" => "User successfully deleted!"]);
-     }
-
 
     // Admin  update a  teacher
     #[Route('/teachers/edit/{id}', name: 'admin_teacher_update', methods: ['PUT'])]
-    #[OA\Post(description: ' Edit teacher selected ')]
+    #[OA\Put(description: 'Update a teacher')]
     #[OA\RequestBody(
-        description: 'Edit teacher ',
+        description: 'Update a teacher by Id',
         content: new OA\JsonContent(
             properties: [
                 new OA\Property(property: 'firstName', type:'string'),
-                new OA\Property(property: 'lastName', type:'string')
+                new OA\Property(property: 'lastName', type:'string'),
             ],
-            example: ['fistName' => 'yessine',
-                'lastName' => 'ben hawala'
-            ]
+            example: ['firstName' => 'asma',
+            'lastName' =>'ab']
         )
     )]
     #[OA\Response(
         response: 200,
         description: 'Returns the updated teacher',
-        content: new Model(type: user::class, groups: ['main'])
+        content: new Model(type: User::class, groups: ['main'])
     )]
     #[OA\Tag(name: 'admin')]
-    public function adminUpdateTeacher(UserRepository $userRepository , $id , Request $request): Response
+    public function adminUpdateTeacher($id, Request $request): JsonResponse
     {
-        $teacher = $userRepository->find($id);
+        $teacher = $this->userRepository->find($id);
         if (!$teacher) {
             return $this->json(["message" => "There is no teacher with that ID"]);
         }
-        // Get the request content as an array
-        $content = json_decode($request->getContent(), true);
-        $teacher->setfirstName($content["firstName"]);
-        $teacher->setLastName($content["lastName"]);
-        $this->entityManager->persist($teacher);
-        $this->entityManager->flush();
-        return $this->json($teacher, 200, [], ['teacher-edit']);
-
+        return $this->adminUpdateUser($teacher, $request);
     }
 
+    public function adminUpdateUser(User $user, Request $request): JsonResponse
+    {
+        // Get the request content as an array
 
+       $content = json_decode($request->getContent(), true);
+        $user->setfirstName($content["firstName"]);
+        $user->setLastName($content["lastName"]);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return $this->json($user, 200, [], ['groups' => 'edit-profile']);
+    }
+
+    // Admin delete teacher
     #[Route('/teachers/delete/{id}', name: 'admin_teacher_delete', methods: ['DELETE'])]
     #[OA\Delete(description: 'Deletes a teacher')]
     #[OA\Response(
@@ -225,17 +223,22 @@ class AdminController extends AbstractController
         content: new Model(type: User::class, groups: ['main'])
     )]
     #[OA\Tag(name: 'admin')]
-    public function adminDeleteTeacher(UserRepository $userRepository, $id): Response
+    public function adminDeleteTeacher($id): JsonResponse
     {
-       $teacher = $userRepository->find($id);
-       if (!$teacher) {
-           return $this->json(["message" => "There is no student with that ID"]);
-       }
-       // delete teacher with the remove function
-       $this->entityManager->remove($teacher);
-       $this->entityManager->flush();
-       return $this->json($teacher, 200, [], ['teacher-delete']);
-
+        $teacher = $this->userRepository->find($id);
+        if (!$teacher) {
+            return $this->json(["message" => "There is no teacher with that ID"]);
+        }
+       return $this->adminDeleteUser($teacher);
    }
+
+    public function adminDeleteUser(User $user): JsonResponse
+    {
+        // Mark user as deleted
+        $user->setIsDeleted(true);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return $this->json(["message" => "User successfully deleted!"]);
+    }
 
 }
