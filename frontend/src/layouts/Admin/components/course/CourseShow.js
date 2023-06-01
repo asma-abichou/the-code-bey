@@ -2,9 +2,28 @@ import React from "react";
 import { useLayoutEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "../../../../api/axios";
 
 const CourseShow = () => {
   const { id } = useParams();
+  const [response, setResponse] = useState([]);
+  useLayoutEffect(() => {
+   
+    chargeStudentId();
+  }, []);
+  const chargeStudentId = async () => {
+    await axios
+      .get(`http://127.0.0.1:8000/api/admin/course/show/${id}`, {
+       
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((response) => {
+        setResponse(response.data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
   // Get authentication token from local storage
 
   const [name, setName] = useState("");
@@ -31,16 +50,15 @@ const CourseShow = () => {
             <label htmlFor="id">ID :</label>
             <input disabled type="text" id="id" value={id} />
             <label htmlFor="name">Title :</label>
-            <input disabled type="text" id="name" value={name} />
+            <input disabled type="text" id="name" value={response.title} />
             <label htmlFor="duration">Duration :</label>
-            <input disabled type="text" id="duration" value={duration} />
+            <input disabled type="text" id="duration" value={response.duration} />
           </div>
-          <label htmlFor="category">Category :</label>
-          <input disabled type="text" id="category" value={category} />
+          
           <label htmlFor="description">Description :</label>
-          <textarea disabled id="description" value={description} />
+          <textarea disabled id="description" value={response.description} />
           <label htmlFor="file">Fichier :</label>
-          <input disabled type="file" id="file" />
+          <input disabled type="file" id="file"  />
         </form>
         <a
           href="#"

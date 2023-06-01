@@ -13,6 +13,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link } from "react-router-dom";
 
 import DeleteIcon from "@mui/icons-material/Delete";
+import axios from "../../../api/axios";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
 [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -33,45 +34,79 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 },
 }));
 
-    export default function CustomizedTables({ rows, headers }) {
-    const handleDelete = () => {//fonction mta3 el delete
-        console.log("delete");
+export default function CustomizedTables({ rows, headers, type }) {
+    const deleteStudent = async (id) => {
+      try {
+        const response = await axios.delete(
+          `http://127.0.0.1:8000/api/admin/students/delete/${id}`
+        );
+        console.log("Object deleted successfully");
+        // Handle any additional logic after deleting the object
+      } catch (error) {
+        console.log("Error deleting object: ", error);
+        // Handle error cases
+      }
     };
-
+  
+    const deleteTeacher = async (id) => {
+      try {
+        const response = await axios.delete(
+          `http://127.0.0.1:8000/api/admin/teachers/delete/${id}`
+        );
+        console.log("Object deleted successfully");
+        // Handle any additional logic after deleting the object
+      } catch (error) {
+        console.log("Error deleting object: ", error);
+        // Handle error cases
+      }
+    };
+  
+    const handleDelete = (id) => {
+      if (type === "student") {
+        deleteStudent(id); 
+        
+      } else if (type === "teacher") {
+        deleteTeacher(id);
+      }
+      console.log("===================deletestudent")
+      console.log("===================type",type)
+    };
+  
     return (
-        <TableContainer component={Paper}>
+      <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
-            <TableHead>
+          <TableHead>
             <TableRow>
-                {headers.map((header) => (
+              {headers.map((header) => (
                 <StyledTableCell>{header}</StyledTableCell>
-                ))}
-                <StyledTableCell>Action</StyledTableCell>
+              ))}
+              <StyledTableCell>Action</StyledTableCell>
             </TableRow>
-            </TableHead>
-            <TableBody>
+          </TableHead>
+          <TableBody>
             {rows.map((row) => (
-                <StyledTableRow key={row.ID}>
+              <StyledTableRow key={row.id}>
                 {headers.map((header) => (
-                    <StyledTableCell align="left">{row[header]}</StyledTableCell>
+                  <StyledTableCell align="left">{row[header]}</StyledTableCell>
                 ))}
                 <StyledTableCell>
-                    <Link to={"show/" + row.ID}>
+                  <Link to={"show/" + row.id}>
                     <VisibilityIcon color="action" />
-                    </Link>
-                    <Link to={"edit/" + row.ID}>
+                  </Link>
+                  <Link to={"edit/" + row.id}>
                     <EditIcon color="primary" />
-                    </Link>
-                    <DeleteIcon
+                  </Link>
+                  <DeleteIcon
                     color="error"
                     style={{ cursor: "pointer" }}
-                    onClick={handleDelete}
-                    />
+                    onClick={() => handleDelete(row.id)}
+                  />
                 </StyledTableCell>
-                </StyledTableRow>
+              </StyledTableRow>
             ))}
-            </TableBody>
+          </TableBody>
         </Table>
-        </TableContainer>
+      </TableContainer>
     );
-}
+  }
+  

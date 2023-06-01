@@ -2,6 +2,7 @@ import React from "react";
 import { useLayoutEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "../../../../api/axios";
 
 const TeacherShow = () => {
   const { id } = useParams();
@@ -14,6 +15,24 @@ const TeacherShow = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false); // new state variable
 
+  const [response, setResponse] = useState([]);
+  useLayoutEffect(() => {
+   
+    chargeStudentId();
+  }, []);
+  const chargeStudentId = async () => {
+    await axios
+      .get(`http://127.0.0.1:8000/api/admin/teacher/show/${id}`, {
+       
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((response) => {
+        setResponse(response.data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -53,28 +72,28 @@ const TeacherShow = () => {
               disabled
                 type="text"
                 id="nom"
-                value={nom}
+                value={response.firstName}
               />
               <label htmlFor="prenom">Prenom :</label>
               <input
               disabled
                 type="text"
                 id="prenom"
-                value={prenom}
+                value={response.lastName}
               />
               <label htmlFor="username">Username :</label>
               <input
               disabled
                 type="text"
                 id="username"
-                value={username}
+                value={response.username}
               />
               <label htmlFor="email">Email :</label>
               <input
               disabled
                 type="email"
                 id="email"
-                value={email}
+                value={response.email}
               />
             </div>
 

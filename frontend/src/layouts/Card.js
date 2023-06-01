@@ -1,39 +1,33 @@
-import React from 'react'
-import './card.css'
+import React from 'react';
+import './card.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Card = (props) => {
   const navigate = useNavigate();
-  const { title, imageUrl, body, id, subscribed } = props
+  const { title, imageUrl, body, id, subscribed } = props;
+
   const navigatevid = () => {
-
-
     navigate(`${title}`);
   };
-  console.log('££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££££')
 
   const subscribe = () => {
-    console.log(id)
-    axios.post('http://127.0.0.1:8000/api/student/subscribe', { id }, {
-      headers: {
-        "Content-Type": "application/json",
-
-
-      }
-
-    })
-
-      .then(response => {
-        console.log(response);
-
+    console.log(id);
+    axios
+      .post('http://127.0.0.1:8000/api/student/subscribe', { id }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
-      .catch(error => {
-        console.error(error);
+      .then((response) => {
+        toast(response.data.message); // Display toast notification with the response message
+      })
+      .catch((error) => {
+        console.log(error);
       });
-  }
-
-
+  };
 
   return (
     <div className='card-container'>
@@ -43,32 +37,28 @@ const Card = (props) => {
       <div className='card-content'>
         <div className='card-title'>
           <h3>{title}</h3>
-
         </div>
         <div className='card-body'>
           <p>{body}</p>
-
         </div>
       </div>
-      <div className='buttn' >
-        {!subscribed ?
+      <div className='buttn'>
+        {!subscribed ? (
           <button onClick={subscribe} className='edit-button'>
-            <a className='Sign'>
-              Subscribe
-            </a>
+            <a className='Sign'>Subscribe</a>
           </button>
-          : <></>}
+        ) : (
+          <></>
+        )}
         <button onClick={navigatevid} className='edit-button'>
-          <a className='Sign'>
-            view more
-          </a>
+          <a className='Sign'>view more</a>
+          <ToastContainer/>
         </button>
 
-
       </div>
-
+     
     </div>
-  )
-}
+  );
+};
 
-export default Card
+export default Card;

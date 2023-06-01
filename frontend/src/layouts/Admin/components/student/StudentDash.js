@@ -1,21 +1,37 @@
+import { useState } from "react";
+import axios from "../../../../api/axios"
 import CustomizedTables from "../CustomizedTables";
+import { useEffect } from "react";
+import { useLayoutEffect } from "react";
+
+
 
 const StudentDash = () => {
-  function createData(ID, Nom, Prenom, Username,Email) {
-    return { ID, Nom, Prenom, Username,Email };
-  }
-  const rows = [
-    createData(0, "hawalastudent", "Yessine", "hawala12", 4.0),
-    createData(1, "Hawala", "Yessine", "9.0, 37", 4.3),
+
+  const [response, setResponse] = useState([]);
+  useLayoutEffect(() => {
    
-    createData(3, "Asma", "student", "3.7, 67", 4.3),
-    createData(4, "hawala", "Mohamed", "16.0, 49", 3.9),
-  ];//get lel list lkol mta3 el students 
-  const headers = ["ID", "Nom", "Prenom",  "Username","Email"];//tbadalhom haseb el donnees eli bech tjik ha4om houma el headers mta3 tableau
+    chargeStudent();
+  }, []);
+  const chargeStudent = async () => {
+    await axios
+      .get(`http://127.0.0.1:8000/api/admin/students/list`, {
+       
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((response) => {
+        setResponse(response.data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
+ 
+  const headers = ["id", "email", "username",  "firstName","lastName"];//tbadalhom haseb el donnees eli bech tjik ha4om houma el headers mta3 tableau
   return (
     <div>
       <h1>Students Dashboard</h1>
-      <CustomizedTables rows={rows} headers={headers}></CustomizedTables>
+      <CustomizedTables rows={response} headers={headers} type={"student"} ></CustomizedTables>
     </div>
   );
 };

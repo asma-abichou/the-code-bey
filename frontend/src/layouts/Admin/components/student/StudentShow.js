@@ -2,15 +2,34 @@ import React from "react";
 import { useLayoutEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import axios from "../../../../api/axios"
 const StudentShow = () => {
   const { id } = useParams();
+  
+  const [response, setResponse] = useState([]);
+  useLayoutEffect(() => {
+   
+    chargeStudentId();
+  }, []);
+  const chargeStudentId = async () => {
+    await axios
+      .get(`http://127.0.0.1:8000/api/admin/students/show/${id}`, {
+       
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((response) => {
+        setResponse(response.data);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
   //ta3mel get by id
 
 
   // Get authentication token from local storage
 
-  const [nom, setNom] = useState("");
+  const [nom, setNom] = useState(response.firstName);
   const [prenom, setPrenom] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -51,34 +70,35 @@ const StudentShow = () => {
                 id="id"
                 value={id}
               />
-              <label htmlFor="nom">Nom :</label>
+              <label htmlFor="nom">firstName:</label>
               <input
               disabled
                 type="text"
                 id="nom"
-                value={nom}
+                value={response.firstName}
               />
-              <label htmlFor="prenom">Prenom :</label>
+              <label htmlFor="prenom">lastName :</label>
               <input
               disabled
                 type="text"
                 id="prenom"
-                value={prenom}
+                value={response.lastName}
               />
               <label htmlFor="username">Username :</label>
               <input
               disabled
                 type="text"
                 id="username"
-                value={username}
+                value={response.username}
               />
               <label htmlFor="email">Email :</label>
               <input
               disabled
                 type="email"
                 id="email"
-                value={email}
+                value={response.email}
               />
+            
             </div>
 
           </form>
