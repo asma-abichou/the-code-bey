@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Course;
 use App\Entity\User;
 use App\Repository\CourseRepository;
+use App\Repository\CategoryRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use JamesHeinrich\GetID3\GetID3;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Attributes as OA;
+use DateTimeImmutable;
 
 #[Route('/api/admin')]
 class AdminController extends AbstractController
@@ -21,7 +24,8 @@ class AdminController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface  $entityManager,
         private readonly UserRepository $userRepository,
-        private readonly CourseRepository $courseRepository
+        private readonly CourseRepository $courseRepository,
+        private readonly CategoryRepository $categoryRepository
     )
     {
     }
@@ -86,8 +90,9 @@ class AdminController extends AbstractController
     {
         return $this->json($this->userRepository->find($id), 200, [], ['groups' => ['student-show']]);
     }
+
     // Admin show list of all courses
-    #[Route('/course/list', name: 'admin_course_list', methods: ['GET'])]
+    #[Route('/courses/list', name: 'admin_courses_list', methods: ['GET'])]
     #[OA\Get(description: 'Get the list of all courses ')]
     #[OA\Response(
         response: 200,
@@ -103,8 +108,8 @@ class AdminController extends AbstractController
         $courses = $this->courseRepository->findAll();
         return $this->json($courses, 200, [], ['groups' => ['main']]);
     }
-    // Admin show selected courses
-    #[Route('/course/show/{id}', name: 'admin_course_show', methods: ['GET'])]
+    // Admin show selected course
+    #[Route('/courses/show/{id}', name: 'admin_course_show', methods: ['GET'])]
     #[OA\Get(description: 'Get more details about course selected  ')]
     #[OA\Response(
         response: 200,
@@ -286,8 +291,8 @@ class AdminController extends AbstractController
 
     //COURSES
     // Admin  update a course
-    #[Route('/course/edit/{id}', name: 'admin_course_update', methods: ['PUT'])]
-    #[OA\Put(description: 'Update a course')]
+    #[Route('/courses/edit/{id}', name: 'admin_course_update', methods: ['POST'])]
+    #[OA\Post(description: 'Update a course')]
     #[OA\RequestBody(
         description: 'Update a course by Id',
         content: [new OA\MediaType(mediaType: "multipart/form-data" , schema: new OA\Schema(
@@ -309,13 +314,13 @@ class AdminController extends AbstractController
         content: new Model(type: Course::class, groups: ['main'])
     )]
     #[OA\Tag(name: 'admin')]
-    public function adminUpdateCourse( $id, Request $request): Response
+    public function adminUpdateCourse($id, Request $request): Response
     {
         if (!$this->isGranted("ROLE_ADMIN"))
         {
             return $this->json(["message" => "You are not authorized to update this course"], 403);
         }
-        $course =$this->courseRepository->find($id);
+        $course = $this->courseRepository->find($id);
         if (!$course) {
             return $this->json(["message" => "There is no course with that ID"]);
         }
@@ -339,12 +344,13 @@ class AdminController extends AbstractController
         }
         $this->entityManager->persist($course);
         $this->entityManager->flush();
+
         return $this->json($course, 200, [], ['groups' => ['main']]);
     }
 
 
     // Admin  delete a course
-    #[Route('/course/delete/{id}', name: 'admin_teacher_delete', methods: ['DELETE'])]
+    #[Route('/courses/delete/{id}', name: 'admin_teacher_delete', methods: ['DELETE'])]
     #[OA\Delete(description: 'Deletes a course')]
     #[OA\Response(
         response: 200,
@@ -367,5 +373,32 @@ class AdminController extends AbstractController
         $this->entityManager->flush();
         return new Response('The course with ID '.$id.' has been deleted');
     }
+
+    private function videoUpload($videoFile): array|JsonResponse
+    {
+
+        if ($videoFile && $videoFile->getClientOriginalExtension() !== 'mp4') {
+            return $this->json(["message" => "Invalid file format. Please upload a .mp4 file."], 400);
+        }
+        // generate random file name
+        $videoFileName = md5(uniqid()) . $videoFile->getClientOriginalName();
+        // Remove spaces from video file name
+        $videoFileName = str_replace(" ","",$videoFileName);
+        $videoPath = "/public/uploaded-videos/";
+        // Get video full path
+        $fullPath = $this->getParameter('kernel.project_dir') . $videoPath;
+        // Upload video
+        $videoFile->move($fullPath, $videoFileName);
+
+        // Get video duration
+        $getID3 = new GetID3();
+        $videoFileInfos = $getID3->analyze($fullPath . $videoFileName);
+        $duration = $videoFileInfos["playtime_string"];
+        return [
+            "path" => "/uploaded-videos/" . $videoFileName,
+            "duration" => $duration
+        ];
+    }
+
 
 }

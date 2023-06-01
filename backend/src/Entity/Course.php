@@ -31,6 +31,7 @@ class Course
     private ?string $duration = null;
 
     #[ORM\ManyToOne(inversedBy: 'courses')]
+    #[Groups('main')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 

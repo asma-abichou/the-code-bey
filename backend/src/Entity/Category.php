@@ -25,6 +25,7 @@ class Category
     #[Groups('main')]
     private ?string $title = null;
 
+
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Course::class)]
     private Collection $courses;
 
