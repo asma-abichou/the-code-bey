@@ -36,6 +36,7 @@ class Course
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'createdCourses')]
+    #[Groups('main')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $teacher = null;
 

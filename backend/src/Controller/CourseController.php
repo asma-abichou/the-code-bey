@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Course;
 use App\Repository\CategoryRepository;
 use App\Repository\CourseRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JamesHeinrich\GetID3\GetID3;
 use JamesHeinrich\GetID3\Module\Tag\ID3v2;
@@ -138,7 +139,7 @@ class CourseController extends AbstractController
         content: new Model(type: Course::class, groups: ['main'])
     )]
     #[OA\Tag(name:'Course')]
-    public function getCourseById(CourseRepository $courseRepository, $id): Response
+    public function getCourseById(CourseRepository $courseRepository, $id ): Response
     {
         $course = $courseRepository->find($id);
         if($course)

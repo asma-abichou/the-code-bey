@@ -25,11 +25,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list'])]
     private ?int $id = null;
 
-    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list','show-details' , 'main'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $username = null;
 
@@ -50,11 +50,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
 
-    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list',  'teacher-delete'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list',  'teacher-delete' , 'main'])]
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
-    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list', 'teacher-delete'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list', 'teacher-delete', 'main'])]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 

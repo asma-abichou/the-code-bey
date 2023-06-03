@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9faf8f3c-1a35-4770-bee8-79a9f4363b47" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/backend/src/Controller/TeacherController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/TeacherController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Controller/CourseController.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Controller/CourseController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/Entity/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/Entity/User.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +16,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/frontend/package.json" />
+  </component>
   <component name="ProjectId" id="2O4xMyz2sjexfMph8JH8nXeQSvN" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -25,6 +29,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -38,6 +43,7 @@
       <updated>1680833615990</updated>
       <workItem from="1680833615994" duration="3000" />
       <workItem from="1682502170478" duration="10000" />
+      <workItem from="1685814529080" duration="200000" />
     </task>
     <servers />
   </component>
