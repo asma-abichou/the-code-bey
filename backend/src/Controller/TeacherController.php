@@ -42,7 +42,23 @@ class TeacherController extends AbstractController
         $courseCreated = $currentUser->getCreatedCourses();
         return $this->json($courseCreated, 200, [], ['groups' => ['main']]);
     }
-
+    // admin show list of all teacher
+    #[Route('/list', name: 'teachers_list', methods: ['GET'])]
+    #[OA\Get(description: 'Get the list of all teachers')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the list of all teachers',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: User::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'Teacher')]
+    public function adminTeacherList(UserRepository $userRepository): Response
+    {
+        $teachers = $userRepository->fetchUsersByRole("ROLE_TEACHER");
+        return $this->json($teachers, 200, [], ['groups' => ['teacher-list']]);
+    }
 
 
     #[Route('/profile', name: 'api_teacher_profile', methods: ['GET'])]
