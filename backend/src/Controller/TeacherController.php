@@ -43,7 +43,7 @@ class TeacherController extends AbstractController
         return $this->json($courseCreated, 200, [], ['groups' => ['main']]);
     }
     // admin show list of all teacher
-    #[Route('/list', name: 'teachers_list', methods: ['GET'])]
+    #[Route('/teachers/list', name: 'teachers_list', methods: ['GET'])]
     #[OA\Get(description: 'Get the list of all teachers')]
     #[OA\Response(
         response: 200,
@@ -90,7 +90,7 @@ class TeacherController extends AbstractController
             $allCourses["courses"][] = $courseArr;
         }
 
-        $userArray["teacher"] = ["firstName" => $teacher->getFirstName(), "lastName" => $teacher->getLastName(), "email" => $teacher->getEmail()];
+        $userArray["teacher"] = ["firstName" => $teacher->getFirstName(), "lastName" => $teacher->getLastName(), "email" => $teacher->getEmail(), "picture" => $teacher->getPicture()];
         $response = array_merge($userArray, $allCourses);
         return $this->json($response, 200);
 

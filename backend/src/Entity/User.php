@@ -66,7 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinTable(name: 'course_student')]
     private Collection $subscribedCourses;
 
-    #[Groups(['edit-profile', 'student-show' , 'teacher-show'])]
+    #[Groups(['edit-profile', 'student-show' , 'teacher-show', 'main' ])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
@@ -115,7 +115,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->username;
     }
 
     /**

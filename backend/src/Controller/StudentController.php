@@ -122,7 +122,7 @@ class StudentController extends AbstractController
             $allCourses["courses"][] = $courseArr;
         }
 
-        $userArray["user"] = ["firstName" => $user->getFirstName(), "lastName" => $user->getLastName(), "email" => $user->getEmail()];
+        $userArray["user"] = ["firstName" => $user->getFirstName(), "lastName" => $user->getLastName(), "email" => $user->getEmail(), "picture" => $user->getPicture()];
         $response = array_merge($userArray, $allCourses);
         return $this->json($response, 200);
 
