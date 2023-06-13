@@ -22,7 +22,7 @@ class CategoryController extends AbstractController
     }
 
 
-    #[Route('/category', name: 'list', methods: ['GET'])]
+    #[Route('/category/list', name: 'list', methods: ['GET'])]
     #[OA\Response(
         response: 200,
         description: 'Returns the list of categories',
