@@ -9,7 +9,6 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,6 +20,26 @@ class TeacherController extends AbstractController
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
+
+    // show list of all teacher
+    #[Route('/list-teacher', name: 'get_teacher_list', methods: ['GET'])]
+    #[OA\Get(description: 'Get the list of all teachers')]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the list of all teachers',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: User::class, groups: ['main']))
+        )
+    )]
+    #[OA\Tag(name: 'default')]
+    public function TeacherList(UserRepository $userRepository): Response
+    {
+        $teachers = $userRepository->fetchUsersByRole("ROLE_TEACHER");
+        return $this->json($teachers, 200, [], ['groups' => ['main']]);
+    }
+
+
     // create an api to get the teacher created courses
     #[Route('/created-courses', name: 'get_courses', methods: ['GET'])]
     #[OA\Get(description: ' get the teacher created courses')]
@@ -42,23 +61,7 @@ class TeacherController extends AbstractController
         $courseCreated = $currentUser->getCreatedCourses();
         return $this->json($courseCreated, 200, [], ['groups' => ['main']]);
     }
-    // admin show list of all teacher
-    #[Route('/teachers/list', name: 'teachers_list', methods: ['GET'])]
-    #[OA\Get(description: 'Get the list of all teachers')]
-    #[OA\Response(
-        response: 200,
-        description: 'Returns the list of all teachers',
-        content: new OA\JsonContent(
-            type: 'array',
-            items: new OA\Items(ref: new Model(type: User::class, groups: ['main']))
-        )
-    )]
-    #[OA\Tag(name: 'Teacher')]
-    public function adminTeacherList(UserRepository $userRepository): Response
-    {
-        $teachers = $userRepository->fetchUsersByRole("ROLE_TEACHER");
-        return $this->json($teachers, 200, [], ['groups' => ['teacher-list']]);
-    }
+
 
 
     #[Route('/profile', name: 'api_teacher_profile', methods: ['GET'])]

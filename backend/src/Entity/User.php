@@ -50,11 +50,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
 
-    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list',  'teacher-delete' , 'main'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-delete' , 'main'])]
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
-    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list', 'teacher-delete', 'main'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-delete', 'main'])]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
 
@@ -73,10 +73,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isDeleted = false;
 
+    #[ORM\OneToMany(mappedBy: 'student', targetEntity: Comment::class)]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->createdCourses = new ArrayCollection();
         $this->subscribedCourses = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -265,6 +269,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsDeleted(bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getStudent() === $this) {
+                $comment->setStudent(null);
+            }
+        }
 
         return $this;
     }

@@ -55,7 +55,7 @@ class CourseController extends AbstractController
         )
     )]
     #[OA\Tag(name: 'Course')]
-    public function listOfCoursesByCategory(CourseRepository $courseRepository, CategoryRepository $categoryRepository, $categoryId): Response
+    public function listOfCoursesByCategory( CategoryRepository $categoryRepository, $categoryId): Response
     {
         $category = $categoryRepository->find($categoryId);
         if(!$category)
@@ -165,7 +165,7 @@ class CourseController extends AbstractController
         $course = $courseRepository->find($id);
         if(!$this->isGranted("ROLE_TEACHER"))
         {
-            return $this->json(["message" => "You are not a teacher and you are not authorized to add a course!"], 403);
+            return $this->json(["message" => "You are not a teacher and you are not authorized to delete a course!"], 403);
         }
 
         if (!$course) {

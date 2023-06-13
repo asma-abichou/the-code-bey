@@ -55,10 +55,14 @@ class Course
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $video = null;
 
+    #[ORM\OneToMany(mappedBy: 'course', targetEntity: comment::class)]
+    private Collection $comments;
+
 
     public function __construct()
     {
         $this->student = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
 
@@ -185,7 +189,34 @@ class Course
     public function setVideo(?string $video): self
     {
         $this->video = $video;
+        return $this;
+    }
 
+    /**
+     * @return Collection<int, comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setCourse($this);
+        }
+        return $this;
+    }
+
+    public function removeComment(comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getCourse() === $this) {
+                $comment->setCourse(null);
+            }
+        }
         return $this;
     }
 
