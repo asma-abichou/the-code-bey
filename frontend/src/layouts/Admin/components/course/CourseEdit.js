@@ -16,7 +16,7 @@ const CourseEdit = () => {
 
   useEffect(() => {
     // Fetch the student data
-    axios.get(`http://127.0.0.1:8000/api/admin/course/show/${id}`)
+    axios.get(`http://127.0.0.1:8000/api/admin/courses/show/${id}`)
       .then(response => {
         const studentData = response.data;
 
@@ -56,7 +56,7 @@ const CourseEdit = () => {
     formData.append('myVideo', file);
 
     // Send the updated course data
-    axios.post(`/api/admin/course/edit/${id}`, formData)
+    axios.post(`http://127.0.0.1:8000/api/admin/courses/edit/${id}`, formData)
       .then(response => {
         setIsSubmitted(true);
         console.log(response.data); // Handle the successful response

@@ -10,8 +10,8 @@ import {
   Avatar,
   CardContent,
 } from '@material-ui/core';
-import './Stream.css';
 import { Link, useOutletContext } from 'react-router-dom';
+import './stream-list.css';
 
 const StreamList = () => {
   const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
@@ -20,6 +20,7 @@ const StreamList = () => {
   useLayoutEffect(() => {
     showNav();
   }, []);
+
   const dispatch = useDispatch();
   const state = useSelector((state) => state.streams);
   const streams = Object.values(state);
@@ -32,29 +33,77 @@ const StreamList = () => {
     dispatch(fetchStreams());
   }, [dispatch]);
 
+  const openOBS = () => {
+    alert('Please open OBS to start streaming');
+  };
+
   const renderAuthUser = (stream) => {
-    return (
-      <React.Fragment>
-        <Link to={`/stream/edit/${stream.id}`} style={{ textDecoration: 'none' }}>
+    const role = localStorage.getItem('roles');
+
+    if (role === 'ROLE_ADMIN' || role === 'ROLE_TEACHER') {
+      return (
+        <>
+          <Link to={`/stream/edit/${stream.id}`} style={{ textDecoration: 'none' }}>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: 'rgb(5, 31, 66)',
+                color: '#fff',
+                marginBottom: '8px',
+                marginTop: '8px',
+                marginRight: '8px',
+                width: '150px',
+              }}
+            >
+              Edit
+            </Button>
+          </Link>
           <Button
             variant="contained"
-            style={{
-              backgroundColor: 'rgb(5, 31, 66)',
-              color: '#fff',
-              marginRight: 10,
-            }}
+            color="secondary"
+            style={{ width: '150px' }}
+            onClick={() => onItemDelete(stream.id)}
           >
-            Edit
+            Delete
           </Button>
-        </Link>
+          {role === 'ROLE_TEACHER' && (
+           <div style={{ display: 'flex', marginTop: '8px' }}>
+           <Button
+             variant="contained"
+             style={{
+               backgroundColor: 'rgb(5, 31, 66)',
+               color: '#fff',
+               marginRight: '8px',
+               marginTop: '8px',
+               flex: 1,
+               width: '150px',
+             }}
+             onClick={openOBS}
+           >
+             Start Streaming (OBS)
+           </Button>
+         </div>
+         
+         
+          )}
+        </>
+      );
+    }
+
+    return (
+      <Link to={`/stream/watch/${stream.id}`} style={{ textDecoration: 'none' }}>
         <Button
           variant="contained"
-          color="secondary"
-          onClick={() => onItemDelete(stream.id)}
+          style={{
+            backgroundColor: 'rgb(5, 31, 66)',
+            color: '#fff',
+            marginRight: 10,
+            width: '150px',
+          }}
         >
-          Delete
+          Watch Stream
         </Button>
-      </React.Fragment>
+      </Link>
     );
   };
 
@@ -77,28 +126,15 @@ const StreamList = () => {
             <div style={{ display: 'flex', flexDirection: 'row' }}>
               <Avatar src={stream.user.avatar_url} />
               <Typography variant="h6" style={{ paddingLeft: 10 }}>
-                {stream.user.username}{' '}
+                {stream.user.username} Teacher
               </Typography>
             </div>
             <CardContent>
-              <Typography variant="h6">{stream.title}</Typography>
-              <Typography component="p">{stream.description}</Typography>
-              <div style={{ position: 'absolute', bottom: 5 }}>
-                <Link
-                  to={`/stream/watch/${stream.id}`}
-                  style={{ textDecoration: 'none' }}
-                >
-                  <Button
-                    variant="contained"
-                    style={{
-                      backgroundColor: 'rgb(5, 31, 66)',
-                      color: '#fff',
-                      marginRight: 10,
-                    }}
-                  >
-                    Watch Stream
-                  </Button>
-                </Link>
+              <Typography variant="h4">{stream.title}</Typography>
+              <Typography variant="h6" color="black">
+                {stream.description}
+              </Typography>
+              <div style={{ bottom: 5 }}>
                 {renderAuthUser(stream)}
               </div>
             </CardContent>
@@ -109,27 +145,28 @@ const StreamList = () => {
   };
 
   const renderButton = () => {
-    return (
-      <div style={{ textAlign: 'right' }}>
-        <Link
-          to="/stream/new"
-          style={{
-            textDecoration: 'none',
-          }}
-        >
-          <Button
-            variant="contained"
-            style={{ backgroundColor: 'rgb(5, 31, 66)', color: '#fff' }}
-          >
-            Create Stream
-          </Button>
-        </Link>
-      </div>
-    );
+    const role = localStorage.getItem('roles');
+
+    if (role === 'ROLE_ADMIN' || role === 'ROLE_TEACHER') {
+      return (
+        <div style={{ textAlign: 'right' }}>
+          <Link to="/stream/new" style={{ textDecoration: 'none' }}>
+            <Button
+              variant="contained"
+              style={{ backgroundColor: 'rgb(5, 31, 66)', color: '#fff' }}
+            >
+              Create Stream
+            </Button>
+          </Link>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
-    <Container style={{ marginTop: 70, background: 'white' }}>
+    <Container style={{ marginTop: 70 }}>
       <Grid
         container
         direction="row"
@@ -137,7 +174,7 @@ const StreamList = () => {
         alignItems="center"
         style={{ marginBottom: 10 }}
       >
-        <Typography variant="h4" style={{ color: 'rgb(5, 31, 66)' }}>
+        <Typography variant="h4" style={{ color: '#f50057' }}>
           Streamed Videos
         </Typography>
         {renderButton()}

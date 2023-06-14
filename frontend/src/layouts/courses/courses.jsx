@@ -8,28 +8,11 @@ import png from "../../python.svg";
 import { Link, useOutletContext } from "react-router-dom";
 import axios from "../../api/axios";
 import Footer from "../../components/footer";
-axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
-  "token"
-)}`;
 
-const courses = [
-  { to: "python", title: "Python", logo: png },
-  { to: "reactjs", title: "Reactjs", logo: png },
-  { to: "laravel", title: "Laravel", logo: png },
-  { to: "javaScript", title: "JavaScript", logo: png },
-  { to: "machine learning ", title: "Machine Learning", logo: png },
-  { to: "django", title: "Django", logo: png },
-];
-//to be replaced when consomming API
 
-const enrolled_courses = [
-  { to: "python", name: "Python", logo: png },
-  { to: "reactjs", name: "Reactjs", logo: png },
-  { to: "laravel", name: "Laravel", logo: png },
-  { to: "javaScript", name: "JavaScript", logo: png },
-  { to: "machine learning ", name: "Machine Learning", logo: png },
-  { to: "django", name: "Django", logo: png },
-];
+
+
+
 
 export default function Courses() {
   const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
@@ -41,7 +24,7 @@ export default function Courses() {
   }, []);
   const chargeTitle = async () => {
     await axios
-      .get("http://127.0.0.1:8000/api/category/", {
+      .get("http://127.0.0.1:8000/api/category/list", {
         headers: { "Content-Type": "application/json" },
       })
       .then((response) => {
@@ -53,10 +36,15 @@ export default function Courses() {
       });
   };
   return (
+    <>
+    <div className="page-header">
+    <h1>FIND THE LIST OF AVAILABLE CATEGORIES ON THECODEBEY !</h1></div>
     <div className="body2">
+      
       <div className="courses-div">
-        <h1 className="Sign">Categories</h1>
+        <h1 className="h1courses"tyle={{ textAlign: "center", margin: "0 auto" }}></h1>
         <div className="area">
+        <div className="grid-container">
           {response.map((course, i) => {
             return (
               <Link key={i} to={""+course.id}>
@@ -68,10 +56,12 @@ export default function Courses() {
             );
           })} 
         </div>
+        </div>
       
 
      </div>
-     <Footer/>
+     
     </div>
+    <Footer/></>
   );
 }

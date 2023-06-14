@@ -46,13 +46,14 @@ h3,p{
     display: flex;
     justify-content: center;
 }
-.buttn button{
-    padding: 0.5rem;
-    background-color: aliceblue;
-    border: none;
-    transition: 0.2;
-    margin-bottom: 0.5rem;
-    border-radius: 3px;
+
+    .buttn button {
+        padding: -2.5rem;
+        background-color: aliceblue;
+        border: none;
+        transition: 0.2;
+        margin-bottom: 0.5rem;
+        border-radius: 10px;
 
 }
 

@@ -1,0 +1,53 @@
+.Container {
+    background-color: #f2f2f2;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+   video {
+    width: 100%;
+    border-radius: 8px;
+  }
+  
+  .Container h3 {
+    margin-top: 10px;
+    font-size: 1.8rem;
+    color: #333;
+  }
+  
+  .Container p {
+    margin-top: 5px;
+    font-size: 1.2rem;
+    color: #777;
+  }
+  
+  .live-status-on {
+    margin-top: 5px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #2ecc71;
+  }
+  
+  .live-status-off {
+    margin-top: 5px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #cc2e2e;
+  }
+  .live-views {
+    margin-top: 5px;
+    font-size: 1rem;
+    color: #777;
+    text-align: right;
+    display: flex;
+    align-items: center;
+  }
+  
+  .live-views-logo {
+    margin-right: 5px;
+    font-size: 1.2rem;
+    color: #999;
+  }

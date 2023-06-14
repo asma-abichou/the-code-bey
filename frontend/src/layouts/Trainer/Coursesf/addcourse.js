@@ -33,14 +33,14 @@ const handleCategoryChange=(event)=>{
   setCategoryId(event.target.value)
 }
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/category", {
+    axios.get("http://127.0.0.1:8000/api/category/list", {
       headers: {
         'Content-Type': 'application/json'
       }
     })
       .then((response) => {
         setCategories(response.data);
-        console.log(response);
+       
        
       })
       .catch((error) => {

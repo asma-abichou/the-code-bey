@@ -47,20 +47,20 @@ export default function Home() {
       tl.current = gsap
         .timeline()
         .to(".overlay h1", {
-          delay: 1,
-          duration: 0.5,
+          delay: 0,
+          duration: 0,
           opacity: 0,
           y: -60,
           ease: "easeInOut",
         })
         .to(".overlay span", {
-          duration: 0.5,
+          duration: 0,
           opacity: 0,
           y: -60,
           ease: "easeInOut",
         })
         .to(".overlay", {
-          duration: 0.5,
+          duration: 0,
           top: "-150%",
           ease: "easeInOut",
           onComplete: showCube,
@@ -74,12 +74,7 @@ export default function Home() {
   return (
     <React.Fragment>
       <div className="App" ref={app}>
-        {!cubeISReady && (
-          <div className="overlay">
-            <h1>TheCodeBey</h1>
-            <span>programming life</span>
-          </div>
-        )}
+       
         {cubeISReady && <Body auth={authenticated} />}
         {cubeISReady && (
           <div className="mouse">

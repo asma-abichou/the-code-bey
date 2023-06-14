@@ -12,13 +12,18 @@ import svg from "../whitesvg.svg";
 import AuthContext from "../context/AuthProvider";
 import useAuth from "../hooks/useAuth";
 import Footer from "../components/footer";
-import axios from "../api/axios";
 
-import Avatar from "@mui/material/Avatar";
-import AvatarGroup from "@mui/material/AvatarGroup";
+import Chatbot from "react-chatbot-kit";
+import MessageParser from "./chatbot/MessageParser";
+import ActionProvider from "./chatbot/ActionProvider";
+import config from "./chatbot/config";
+import chatbot from "./chatbot/chatbot.css";
+import img2 from "../static/images/chatt.png";
+import AccountMenu from "./AccountMenu"
 
 const MainLayout = () => {
   const [user, setUser] = useState(null);
+  const [showChatbot, setShowChatbot] = useState(false);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const main = useRef();
@@ -36,6 +41,7 @@ const MainLayout = () => {
     localStorage.removeItem("pwd");
     localStorage.removeItem("user");
     localStorage.removeItem("is_staff");
+    localStorage.removeItem("refreshtoken");
 
     // Clear the authentication state
     setAuth({});
@@ -70,16 +76,19 @@ const MainLayout = () => {
 
     return () => ctx.revert();
   }, [animationIsFinished]);
+  console.log(auth.user)
   console.log(auth.accessToken?.roles);
   const role = localStorage.getItem("roles");
   console.log(role);
   const pages =
-    role === "ROLE_TEACHER"
-      ? [
-          { name: "ProfileTeacher", link: "/profil" },
-          { name: "Admin", link: "/admin" },
-        ]
-      : [{ name: "ProfileUser", link: "/userprofil" }];
+  role === "ROLE_TEACHER"
+  ? [
+      { name: "ProfileTeacher", link: "/profil" },
+      { name: "Admin", link: "/admin" },
+    ]
+  : role === "ROLE_ADMIN"
+  ? [{ name: "ProfileUser", link: "/admin" }]
+  : [{ name: "ProfileUser", link: "/userprofil" }];
 
   return (
     <>
@@ -94,8 +103,8 @@ const MainLayout = () => {
               <Link to="courses">
                 <li>courses</li>
               </Link>
-              <Link to="/courses">
-                <li>blogs</li>
+              <Link to="/streams">
+                <li>LiveStream</li>
               </Link>
               <Link to="/About">
                 <li>About</li>
@@ -118,35 +127,31 @@ const MainLayout = () => {
                   }}
                 />
               </li>
+              
 
               {auth.user && (
-                <>
-                  <li id="logout" onClick={logout}>
-                    Logout
-                  </li>
-
-                  <li
-                    className="pimg"
-                    onClick={() => navigate(pages[0].link, { replace: true })}
-                  >
-                    {
-                      <svg
-                        viewBox="0 0 448 512"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M224 256c70.7 0 128-57.31 128-128s-57.3-128-128-128C153.3 0 96 57.31 96 128S153.3 256 224 256zM274.7 304H173.3C77.61 304 0 381.6 0 477.3c0 19.14 15.52 34.67 34.66 34.67h378.7C432.5 512 448 496.5 448 477.3C448 381.6 370.4 304 274.7 304z"></path>
-                      </svg>
-                    }
-                    <h6>Profil</h6>
-                  </li>
-                </>
+                
+                <AccountMenu />
               )}
             </ul>
+      
           </div>
         </div>
       )}
+          {showChatbot && ( // Conditional rendering for chatbot component
+        <Chatbot
+          config={config}
+          messageParser={MessageParser}
+          actionProvider={ActionProvider}
+          headerText={"TheCodeBey ChatBot"}
+        />
+      )}
+            
 
       <Outlet context={[animationIsFinished, setAnimationIsFinished]} />
+      <a href="#" className="chat-bubble">
+          <img src={img2} alt="Chat bubble icon" onClick={() => setShowChatbot(!showChatbot)} />
+        </a>
     </>
   );
 };

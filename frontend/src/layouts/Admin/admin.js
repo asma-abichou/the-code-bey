@@ -43,6 +43,7 @@ function Admin(props) {
           { label: "Students", to: "students" },
           { label: "Teachers", to: "teachers" },
           { label: "Courses", to: "courses" },
+          { label: "LiveStream", to: "/streams" }
         ].map((item, index) => (
           <ListItem  key={item.label} disablePadding>
             <ListItemButton

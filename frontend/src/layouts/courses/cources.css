@@ -7,12 +7,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
   }
   
   .courses-div {
     width: 90%;
     max-width: 800px;
     margin-bottom: 40px;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Crée 4 colonnes avec la même largeur */
+    grid-gap: 20px; /* Espacement entre les boîtes */
   }
   
   .courses-div h1 {
@@ -24,26 +30,27 @@
   }
   
   .area {
-    display: grid;
+    
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     grid-gap: 30px;
   }
   
-  .box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px;
-    border-radius: 10px;
-    border: 2px solid #ddd;
-    background-color: #fff;
-   
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
+ 
+    .box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 210px;
+      border-radius: 18px;
+      border: 6px solid #ddd;
+      background-color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
   }
+  
   .cardcateg{
-    background-image: url(../../static/images/backgroundCard.jpg);
+    background-image: url(../../static/images/coursess.png);
 
   }
   
@@ -53,15 +60,54 @@
   
   .box p {
     margin: 20px 0 0;
-    color: #444;
+    color: #efe9e9;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
-  }
+}
   
   .box img {
     width: 80px;
     height: 80px;
     margin-bottom: 20px;
+  }
+  .h1courses{
+    
+      margin: 15px;
+      
+      font-size: 32px;
+      background: -webkit-linear-gradient(
+        55deg,
+        rgb(197, 4, 209),
+        rgb(184, 11, 45)
+      );
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    
+  }
+  
+  .page-header{
+      display: flex;
+      background: url("../../static/images/courses.jpg") no-repeat 0 50%;
+      background-size: cover;
+      border: none;
+      height:33vh;
+      margin: 0;
+      padding: 0 0 10px;
+      position: relative;
+      align-items: center;
+      justify-content: center;
+  }
+  .page-header h1 {
+    margin-top: 45px;
+    background: -webkit-linear-gradient(
+      55deg,
+      rgb(197, 4, 209),
+        rgb(184, 11, 45)
+    );
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  text-align: center;
+  font-size: 50px;
   }
   

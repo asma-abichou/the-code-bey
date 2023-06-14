@@ -1,4 +1,3 @@
-
 #videos{
 
     height: 100vh;
@@ -37,21 +36,21 @@
     margin: 30px;
     display: grid;
     place-items: center;
+    background-color: transparent;
 }
 #videos iframe{
     width: 200px;
     height:100px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+}
+
+.ytbbloc .box h4{
     margin-bottom: 15px;
+    color: rgb(239, 245, 245);
 }
 
-.box h4{
-    margin-bottom: 15px;
-    color: aqua;
+.ytbbloc .box p{
+        margin-bottom: 10px;
+        color: white;
 }
-
-.box p{
-        margin-bottom: 15px
-}
-
-
-

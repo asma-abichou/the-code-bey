@@ -1,0 +1,23 @@
+
+.MuiPopover-paper {
+  display: flex;
+    top: 67px !important;
+    width: 200px;
+  }
+  .css-14zy4ak {
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: center;
+    padding-right: 10px;
+    padding-top: 10px;
+}

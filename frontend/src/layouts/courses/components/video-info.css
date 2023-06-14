@@ -1,0 +1,46 @@
+.videoInfo {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    color: white;
+  
+    font-family: "Roboto", "Arial", sans-serif;
+  }
+  
+  .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  @media only screen and (min-width: 768px) {
+    .content-wrapper {
+      flex-direction: row;
+    }
+  }
+  
+  .content-wrapper__left {
+    margin-bottom: 20px;
+  }
+  
+  .content-wrapper__right {
+    text-align: right;
+  }
+  
+  h4 {
+    margin: 0;
+    font-size: 16px;
+    padding-bottom: 15px;
+  }
+  
+  h4 svg {
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+  
+  @media only screen and (min-width: 768px) {
+    h4 {
+      font-size: 18px;
+    }
+  }

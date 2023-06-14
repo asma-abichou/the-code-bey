@@ -55,8 +55,8 @@
   display: inline-block;
   position: relative;
   cursor: pointer;
-  background: linear-gradient(270deg, #3fa1a9, #38056c);
-  
+  background: linear-gradient(270deg, #a93f80, #38056c);
+  background-image: "../../static/images/hawa3.png";
   width: 205px;
   height: 205px;
   justify-content: center;
@@ -158,9 +158,9 @@ input::placeholder {
 }
 .edit-button:hover {
   left: 0;
-  color: #5d1a1a;
+  color: #cebebe;
   width: 180px;
-  box-shadow: 0px 0px 20px 0px #63d3a6;
+  box-shadow: 0px 0px 20px 0px #8a63d3;
 }
 .button2:hover {
   left: 0;

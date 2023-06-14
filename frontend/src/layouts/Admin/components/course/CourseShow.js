@@ -13,7 +13,7 @@ const CourseShow = () => {
   }, []);
   const chargeStudentId = async () => {
     await axios
-      .get(`http://127.0.0.1:8000/api/admin/course/show/${id}`, {
+      .get(`http://127.0.0.1:8000/api/admin/courses/show/${id}`, {
        
         headers: { "Content-Type": "application/json" },
       })
