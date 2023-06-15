@@ -22,14 +22,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list', 'main'])]
     private ?int $id = null;
 
     #[Groups(['edit-profile', 'students-list', 'student-show', 'teacher-list','show-details' , 'main'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[Groups(['edit-profile', 'students-list', 'student-show'])]
+    #[Groups(['edit-profile', 'students-list', 'student-show', 'main'])]
     #[ORM\Column(length: 255, unique: true)]
     private ?string $username = null;
 

@@ -11,8 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactUsController extends AbstractController
 {
     #[Route('/list', name: 'contact_list', methods:"GET")]
-    public function commentsList(ContactUsRepository $contactUsRepository): JsonResponse
+    public function listContactUs(ContactUsRepository $contactUsRepository): JsonResponse
     {
-        return $this->json($contactUsRepository->findAll(), 200, [], ['groups' => ['main']]);
+
     }
 }
