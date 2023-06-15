@@ -1,71 +1,86 @@
 .team-member {
-    text-align: center;
-  }
-  .img-box {
-    height: 350px;
-    overflow: hidden;
-    border-radius: 3px;
-    position: relative;
-  }
-  .team-member img {
-    display: inline-block;
-    margin: 0 auto;
-    height: 350px;
-    border-radius: 3px;
-    object-fit: cover;
-    transition: all 0.5s ease-in-out;
-    cursor: progress;
-    position: relative;
-  }
-  .team-member p {
-    font-size: 14px;
-  }
-  .team-member:hover img {
-    transform: scale(1.1);
-    filter: brightness(0.6);
-  }
-  .hide-email {
-    position: absolute;
-    top: 120%;
-    left: 50%;
-    width: 100%;
-    font-size: 12px !important;
-    padding: 4px;
-    transform: translate(-50%, -50%);
-    color: #eeeeee;
-    background-color: #1d2a45;
-    border-bottom: 0.5px solid #fff;
-    transition: all 0.8s ease;
-    visibility: none;
-  }
-  .img-box:hover .hide-email {
-    top: 75%;
-    visibility: visible;
-  }
-  .team-member h6 {
-    font-weight: 600;
-  }
-  .row-cols-1>* {
-    flex: 0 0 auto;
-    width: 100%;
+  text-align: center;
 }
+
+.img-box {
+  height: 350px;
+  overflow: hidden;
+  border-radius: 3px;
+  position: relative;
+}
+
+.team-member img {
+  display: inline-block;
+  margin: 0 auto;
+  height: 350px;
+  border-radius: 3px;
+  object-fit: cover;
+  transition: all 0.5s ease-in-out;
+  cursor: progress;
+  position: relative;
+}
+
+.team-member p {
+  font-size: 14px;
+}
+
+.team-member:hover img {
+  transform: scale(1.1);
+  filter: brightness(0.6);
+}
+
+.hide-email {
+  position: absolute;
+  top: 120%;
+  left: 50%;
+  width: 100%;
+  font-size: 12px !important;
+  padding: 4px;
+  transform: translate(-50%, -50%);
+  color: #eeeeee;
+  background-color: #1d2a45;
+  border-bottom: 0.5px solid #fff;
+  transition: all 0.8s ease;
+  visibility: none;
+}
+
+.img-box:hover .hide-email {
+  top: 75%;
+  visibility: visible;
+}
+
+.team-member h6 {
+  font-weight: 600;
+}
+
+.row-cols-1 > * {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
 .row {
   flex-shrink: 0;
   margin-top: var(--bs-gutter-y);
+  margin-bottom: var(--bs-gutter-y); /* Add margin-bottom to create space between cards */
   max-width: 100%;
-  padding-left: calc(var(--bs-gutter-x)*.5);
-  padding-right: calc(var(--bs-gutter-x)*.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
   width: 100%;
 }
-.g-3, .gy-3 {
+
+.g-3,
+.gy-3 {
   --bs-gutter-y: 1rem;
 }
+
 .row {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
   display: flex;
   flex-wrap: wrap;
-  margin-left: calc(var(--bs-gutter-x)*-.5);
-  margin-right: calc(var(--bs-gutter-x)*-.5);
-  margin-top: calc(var(--bs-gutter-y)*-1);
+  justify-content: space-around;
+  margin-left: calc(var(--bs-gutter-x) * -0.5);
+  margin-right: calc(var(--bs-gutter-x) * -0.5);
+  margin-top: calc(var(--bs-gutter-y) * -1);
+  
 }

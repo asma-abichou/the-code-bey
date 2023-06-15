@@ -5,11 +5,11 @@ const CommentItem = props => {
   const {arrayList, deleteComment, toggleFavorite} = props
   const {
     id,
-    firstNames,
-    names,
-    comments,
-    newClass,
-    dates,
+    student,
+    
+    content,
+    
+    
     isFavorite,
   } = arrayList
   const imgUrl = isFavorite
@@ -27,10 +27,10 @@ const CommentItem = props => {
       <div className="content-holder">
         <div className="sub-holder">
           <div className="name-holder">
-            <h1 className="username">{names}Hawala</h1>
-            <p className="time-now">{dates}</p>
+            <h1 className="username">{student.firstName}</h1>
+         
           </div>
-          <p className="comment-line">{comments}</p>
+          <p className="comment-line">{content}</p>
         </div>
       </div>
       <div className="icons-holder">

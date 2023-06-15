@@ -230,7 +230,7 @@ Draggable.create("#dragger",{
 
         </div>
          <p className='caption'> 
-         TUTOLRIALS
+        Chatbot
          </p>
         </div>
         <div className="face">

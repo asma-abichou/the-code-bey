@@ -1,34 +1,50 @@
-import { useState } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import CustomizedTables from "../CustomizedTables";
 import { useLayoutEffect } from "react";
 import axios from "../../../../api/axios";
 
 const CourseDash = () => {
-  
   const [response, setResponse] = useState([]);
+
   useLayoutEffect(() => {
-   
     chargeStudent();
   }, []);
+
   const chargeStudent = async () => {
-    await axios
-      .get(`http://127.0.0.1:8000/api/admin/course/list`, {
-       
-        headers: { "Content-Type": "application/json" },
-      })
-      .then((response) => {
-        setResponse(response.data);
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
+    try {
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/admin/courses/list",
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      setResponse(response.data);
+    } catch (err) {
+      console.log("err", err);
+    }
   };
-  const headers = ["id", "title","description","duration" , "video"];
+
+  const headers = ["id", "title", "description", "category", "duration", "video"];
+
+  const getCategoryTitle = (category) => {
+    if (category && category.title) {
+      return category.title;
+    }
+    return "";
+  };
+
+  const tableRows = response.map((row) => ({
+    ...row,
+    category: getCategoryTitle(row.category),
+  }));
+
   return (
     <div>
       <h1>Courses Dashboard</h1>
-      <CustomizedTables rows={response} headers={headers} type={"course"}></CustomizedTables>
+      <CustomizedTables rows={tableRows} headers={headers} type={"course"}></CustomizedTables>
     </div>
   );
 };
+
 export default CourseDash;

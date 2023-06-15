@@ -11,7 +11,7 @@ import jwt_decode from "jwt-decode";
 import useRefreshToken from "../../hooks/useRefreshToken";
 
 import axios from "../../api/axios";
-const LOGIN_URL = "users/login/";
+const LOGIN_URL = "http://127.0.0.1:8000/api/login";
 const Login = () => {
   const refresh = useRefreshToken();
 
@@ -37,8 +37,19 @@ const Login = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // Token exists, navigate to home page
-      navigate("/");
+      const role = localStorage.getItem("roles");
+      console.log(role); // Retrieve the role from local storage using the key
+      let destination = "/"; // Default destination
+  
+      if (role === "ROLE_ADMIN") {
+        destination = "/admin";
+      } else if (role === "ROLE_TEACHER") {
+        destination = "/profil";
+      } else if (role === "ROLE_STUDENT") {
+        destination = "/";
+      }
+  
+      navigate(destination);
     }
   }, [navigate]);
 
@@ -53,58 +64,50 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("submit");
-    await axios
-      .post(
-        "http://127.0.0.1:8000/api/login",
-        JSON.stringify({ username: user, password: pwd }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      )
-      .then((response) => {
-        console.log(response);
-        console.log(response.data.token);
-        console.log(response.data.RefreshToken);
-        console.log(response.data.roles);
-        console.log(JSON.stringify(response?.data));
-        console.log(response.roles);
-        console.log(response.data.id);
-
-        //console.log(JSON.stringify(response));
-        console.log(response.data.token);
-        const accessToken = jwt_decode(response.data.token);
-        // localStorage.setItem("accessToken", accessToken);
-        console.log(accessToken.roles[0]);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("roles", accessToken.roles[0]);
-
-        localStorage.setItem("pwd", pwd);
-
-        localStorage.setItem("user", user);
-        localStorage.setItem("is_staff", accessToken.is_staff);
-
-        const is_staff = accessToken.is_staff;
-        console.log("response :", accessToken.roles);
-        console.log("is_staff :", is_staff);
-        setAuth({ user, pwd, is_staff, accessToken });
-        setUser("");
-        setPwd("");
-        navigate("/", { replace: true });
-      })
-      .catch((err) => {
-        console.log("err", err);
-        if (!err?.response) {
-          setErrMsg("No Server Response");
-        } else if (err.response?.status === 400) {
-          setErrMsg("Missing Username or Password");
-        } else if (err.response?.status === 401) {
-          setErrMsg("Unauthorized");
-        } else {
-          setErrMsg("Login Failed");
-        }
-        errRef.current.focus();
+    try {
+      const response = await axios.post(LOGIN_URL, {
+        username: user,
+        password: pwd,
       });
+  
+      const accessToken = jwt_decode(response.data.token);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("roles", accessToken.roles[0]);
+      localStorage.setItem("refreshtoken", response.data.refresh_token);
+      localStorage.setItem("pwd", pwd);
+      localStorage.setItem("user", user);
+      localStorage.setItem("is_staff", accessToken.is_staff);
+  
+      const is_staff = accessToken.is_staff;
+      setAuth({ user, pwd, is_staff, accessToken });
+      setUser("");
+      setPwd("");
+  
+      // Redirect based on role
+      if (accessToken.roles[0] === "ROLE_ADMIN") {
+        navigate("/admin");
+      } else if (accessToken.roles[0] === "ROLE_TEACHER") {
+        navigate("/profil");
+      } else if (accessToken.roles[0] === "ROLE_STUDENT") {
+        navigate("/");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      console.log("err", err);
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing Username or Password");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg("Login Failed");
+      }
+      errRef.current.focus();
+    }
   };
+  
 
   return (
     <section>
@@ -137,39 +140,13 @@ const Login = () => {
         />
         <button>Sign In</button>
       </form>
-      <p>
-        Need an Account?
-        <br />
-        <span className="line">
-          <Link to="/register">Sign Up</Link>
-        </span>
-      </p>
+      <Link to="/register" >
+                  Don't have an acount Sign Up ?
+                  </Link>
 
-      <p>
-        <span className="line">
-          <Link to="/Reset">forgot password ?</Link>
-        </span>
-      </p>
+      
     </section>
   );
 };
 export default Login;
 
-// function Login() {
-// 	const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
-// 	const showNav = ()=> setAnimationIsFinished(true) ;
-
-// 	useLayoutEffect(()=>{
-// 	  showNav();
-// 	},[])
-// 	let {loginUser} = useContext(AuthContext)
-// 	return (
-// 		<div>
-// 			<form onSubmit={loginUser}>
-// 				<input type="text" name="username" placeholder="Enter Username" />
-// 				<input type="password" name="password" placeholder="Enter Password" />
-// 				<input type="submit"/>
-// 			</form>
-// 		</div>
-// 	);
-//   }

@@ -1,0 +1,68 @@
+
+  
+  .title {
+    color: rgb(5, 31, 66);
+    margin-bottom: 10px;
+  }
+  
+  .button {
+    text-align: right;
+  }
+  
+  .button-link {
+    text-decoration: none;
+  }
+  
+  .create-stream-button {
+    background-color: rgb(5, 31, 66);
+    color: #fff;
+  }
+  
+  .stream-item {
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .stream-paper {
+    padding: 10px;
+    height: 100%;
+  }
+  
+  .stream-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  
+  .username {
+    padding-left: 10px;
+  }
+  
+  .stream-content {
+    position: absolute;
+    bottom: 5px;
+  }
+  
+  .watch-stream-button,
+  .edit-stream-button,
+  .delete-stream-button {
+    background-color: rgb(5, 31, 66);
+    color: #fff;
+    margin-right: 10px;
+  }
+  
+  .delete-stream-button {
+    background-color: red;
+  }
+  
+  .watch-stream-button-link,
+  .edit-stream-button-link {
+    text-decoration: none;
+  }
+  

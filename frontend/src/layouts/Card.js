@@ -2,7 +2,6 @@ import React from 'react';
 import './card.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
-import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Card = (props) => {
@@ -10,7 +9,7 @@ const Card = (props) => {
   const { title, imageUrl, body, id, subscribed } = props;
 
   const navigatevid = () => {
-    navigate(`${title}`);
+    navigate(`${id}`);
   };
 
   const subscribe = () => {
@@ -44,15 +43,15 @@ const Card = (props) => {
       </div>
       <div className='buttn'>
         {!subscribed ? (
-          <button onClick={subscribe} className='edit-button'>
+          <button onClick={subscribe} >
             <a className='Sign'>Subscribe</a>
           </button>
         ) : (
           <></>
         )}
-        <button onClick={navigatevid} className='edit-button'>
+        <button onClick={navigatevid} className>
           <a className='Sign'>view more</a>
-          <ToastContainer/>
+         
         </button>
 
       </div>

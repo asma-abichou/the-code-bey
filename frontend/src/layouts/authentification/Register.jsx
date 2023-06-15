@@ -49,6 +49,7 @@ const Register = () => {
   const [success, setSuccess] = useState(false);
 
   const [role, setRole] = useState("");
+
   useEffect(() => {
     userRef.current.focus();
   }, []);
@@ -57,7 +58,6 @@ const Register = () => {
     setRole(event.target.value); // update role state when user selects an option
   };
 
-  /////// controlled state change handler
   useEffect(() => {
     setValidName(USER_REGEX.test(user));
   }, [user]);
@@ -79,7 +79,6 @@ const Register = () => {
     setValidMatch(pwd === matchPwd);
   }, [pwd, matchPwd]);
 
-  ///// set default msg when retyping after error msg on one of the field
   useEffect(() => {
     setErrMsg("");
   }, [user, email, firstName, lastName, pwd, matchPwd, role]);
@@ -87,27 +86,19 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("submitted");
-    // if button enabled with JS hack
+
     const v1 = USER_REGEX.test(user);
     const v2 = PWD_REGEX.test(pwd);
     const v3 = EML_REGEX.test(email);
-    const v4 = NAME_REGEX.test(lastName);
-    const v5 = NAME_REGEX.test(firstName);
+    const v4 = NAME_REGEX.test(firstName);
+    const v5 = NAME_REGEX.test(lastName);
+    const v6 = pwd === matchPwd;
 
-    if (!v1 || !v2 || !v3 || !v4 || !v5) {
-      const msg = "";
-      !v1 && msg.concat("username ,");
-      !v2 && msg.concat("password ,");
-      !v3 && msg.concat("email ,");
-      !v4 && msg.concat("lastName ,");
-      !v5 && msg.concat("fisrtname ,");
-      setErrMsg(msg + "Invalid Entry");
-      return;
-    }
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/register",
-       ({
+    if (v1 && v2 && v3 && v4 && v5 && v6) {
+      const response = await fetch( "http://127.0.0.1:8000/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           username: user,
           email: email,
           firstName: firstName,
@@ -115,37 +106,33 @@ const Register = () => {
           password: pwd,
           role: role,
         }),
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      // TODO: remove console.logs before deployment
-      console.log(JSON.stringify(response?.data));
-      //console.log(JSON.stringify(response))
-      setSuccess(true);
-      //clear state and controlled inputs
-      setUser("");
-      setPwd("");
-      setMatchPwd("");
-      setfirstName("");
-      setlastName("");
-      setemail("");
-    } catch (err) {
-      if (!err?.response) {
-        setErrMsg("No Server Response");
-      } else if (err.response?.status === 409) {
-        setErrMsg("Username Taken");
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Registration successful
+        setSuccess(true);
+        setUser("");
+        setfirstName("");
+        setlastName("");
+        setemail("");
+        setPwd("");
+        setMatchPwd("");
+        setErrMsg("");
       } else {
-        setErrMsg("Registration Failed");
+        // Registration failed
+        setErrMsg(data.message);
       }
-      errRef.current.focus();
+    } else {
+      setErrMsg("Invalid input");
     }
   };
 
   return (
     <>
       {success ? (
-     <section style={{ background: "#333", padding: "20px" }}>
+     <section style={{ background: "#203e4a", padding: "20px" }}>
      <h1 style={{ color: "#fff", textAlign: "center" }}>Success!</h1>
      <p style={{ textAlign: "center", color: "#fff" }}>
        Click <Link to="/login" style={{ color: "#007bff" }}>here</Link> to go to the login page.

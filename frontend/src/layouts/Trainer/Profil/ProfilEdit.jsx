@@ -25,7 +25,7 @@ const ProfileEdit = () => {
   const [state, setState] = useState({
     file: "",
     imagePreviewUrl:
-      "https://github.com/OlgaKoplik/CodePen/blob/master/profile.jpg?raw=true",
+      "",
     firstName: "",
     lastName: "",
     active: "profile"
@@ -37,7 +37,8 @@ const ProfileEdit = () => {
         <h1>Profile Card</h1>
         <label className="custom-file-upload fas">
           <div className="img-wrap">
-            <img for="photo-upload" src={src} />
+            <img for="photo-upload" src={imagePreviewUrl} alt='click'/>
+        
           </div>
         </label>
         <div className="name">{username}</div>
@@ -86,17 +87,13 @@ const ProfileEdit = () => {
       ...state,
       active: activeP
     });
+    const formData = new FormData();
+    formData.append("firstName", state.firstName);
+    formData.append("lastName", state.lastName);
+    formData.append("profilePicture", state.file);
 
     // Send PUT request to server
-    axios.post('http://127.0.0.1:8000/api/student/profile/edit', {
-      // Add any relevant data to the request body here
-
-
-      firstName: state.firstName,
-      LastName : state.lastName,
-      picture: state.imagePreviewUrl
-
-    })
+    axios.post('http://127.0.0.1:8000/api/teacher/profile/edit', formData)
       .then(response => {
         // Handle success response
         console.log(response);
@@ -107,13 +104,15 @@ const ProfileEdit = () => {
       });
   };
 
+    
 
 
 
 
 
 
-  const { imagePreviewUrl, firstName, lastName, active } = state;
+
+  const {imagePreviewUrl, firstName, lastName, active } = state;
 
   return (
     <div className='body editprofil'>

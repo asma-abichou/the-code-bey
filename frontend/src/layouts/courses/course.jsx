@@ -1,12 +1,7 @@
-import React, { useLayoutEffect } from "react";
-import Content from "../../components/Content";
-import Title from "../../components/Title";
-import Certificat from "../../components/Certificat";
-import "./course.css";
+import React, { useLayoutEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
-import Card from "../Card";
 import axios from "../../api/axios";
-import { useState } from "react";
+import Card from "../Card";
 import img from "../../static/images/course.jpg";
 import Footer from "../../components/footer";
 import img2 from "../../static/images/chatt.png";
@@ -16,28 +11,34 @@ export default function Course() {
   const [animationIsFinished, setAnimationIsFinished] = useOutletContext();
   const showNav = () => setAnimationIsFinished(true);
   const [response, setResponse] = useState([]);
+
   useLayoutEffect(() => {
     showNav();
     chargeCourses();
   }, []);
-  console.log("category============", CategoryID);
+
   const chargeCourses = async () => {
-    await axios
-      .get(`http://127.0.0.1:8000/api/course/category/${CategoryID}`, {
-        //`http://127.0.0.1:8000/api/course/${idCateg}`
-        headers: { "Content-Type": "application/json" },
-      })
-      .then((response) => {
-        setResponse(response.data);
-      })
-      .catch((err) => {
-        console.log("err", err);
+    const token = localStorage.getItem('token'); // Retrieve the JWT token from localStorage or wherever it is stored
+  
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/course/category/${CategoryID}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+        },
       });
+  
+      setResponse(response.data);
+      console.log('category============', response.data);
+    } catch (err) {
+      console.log('err', err);
+    }
   };
+
   return (
     <div>
-      <h1 className="Sign course">Our courses</h1>
-      <div className="courses-container ">
+      <h1 className="Sign course">Courses for {response.length > 0 ? response[0].category.title : ''}</h1>
+      <div className="courses-container">
         {response.map((course, i) => {
           return (
             <Card
