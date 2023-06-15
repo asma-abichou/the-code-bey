@@ -25,7 +25,7 @@ class AdminController extends AbstractController
         private readonly EntityManagerInterface  $entityManager,
         private readonly UserRepository $userRepository,
         private readonly CourseRepository $courseRepository,
-        private readonly CategoryRepository $categoryRepository
+
     )
     {
     }
@@ -196,7 +196,7 @@ class AdminController extends AbstractController
     public function adminTeacherList(): Response
     {
         $teachers = $this->userRepository->fetchUsersByRole("ROLE_TEACHER");
-        return $this->json($teachers, 200, [], ['groups' => ['teacher-list']]);
+        return $this->json($teachers, 200, [], ['groups' => ['main']]);
     }
 
     // Admin show selected teacher
@@ -260,7 +260,8 @@ class AdminController extends AbstractController
     }
 
     // Admin delete teacher
-    #[Route('/teachers/delete/{id}', name: 'admin_teacher_delete', methods: ['DELETE'])]
+
+    #[Route('/teachers/delete/{id}', name: 'teacher_admin_delete', methods: ['DELETE'])]
     #[OA\Delete(description: 'Deletes a teacher')]
     #[OA\Response(
         response: 200,
@@ -285,6 +286,7 @@ class AdminController extends AbstractController
         $this->entityManager->flush();
         return $this->json(["message" => "User successfully deleted!"]);
     }
+
 
 
 
